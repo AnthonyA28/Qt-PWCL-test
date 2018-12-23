@@ -13,7 +13,7 @@
 #include <QDir>
 #include <QDateTime>
 #include <QMessageBox>
-
+#include <QtMath>
 
 #include "xlsxdocument.h"
 #include "xlsxchartsheet.h"
@@ -52,6 +52,7 @@ private:
     bool deserializeArray(const char* const input, unsigned int output_size, std::vector<float>& output);
     int timerId;
     void timerEvent(QTimerEvent *event);
+//    void sendParameters();
     PORT port;
     QString csvFileName;
     QString excelFileName;
