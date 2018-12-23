@@ -1,0 +1,6 @@
+*.obj
+*.exe
+builds/
+*.user
+*.xlsx
+*.csv
