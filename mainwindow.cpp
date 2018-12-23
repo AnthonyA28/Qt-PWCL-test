@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     if( this->csvdoc.open(QIODevice::Truncate | QIODevice::WriteOnly | QIODevice::Text) )
     {
         QTextStream stream(&this->csvdoc);
-        stream << "Time, perent on, Temp, Temp filtered, Set Point\n";
+        stream << "Time, percent on, Temp, Temp filtered, Set Point\n";
     }
     else
     {
@@ -95,6 +95,7 @@ void MainWindow::showRequest(const QString &req)
         ui->outputTable->setItem(ui->outputTable->rowCount()-1, 2, new QTableWidgetItem(QString::number(inputs[i_temperature])));
         ui->outputTable->setItem(ui->outputTable->rowCount()-1, 3, new QTableWidgetItem(QString::number(inputs[i_tempFiltered])));
         ui->outputTable->setItem(ui->outputTable->rowCount()-1, 4, new QTableWidgetItem(QString::number(inputs[i_setPoint])));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 5, new QTableWidgetItem(QString::number(inputs[i_fanSpeed])));
         ui->outputTable->scrollToBottom();   // scroll to the bottom to ensure the last value is visible
 
         /* add each value into the excel file  */
@@ -116,6 +117,154 @@ void MainWindow::showRequest(const QString &req)
     else
     {
         qDebug() << "ERROR Failed to deserialize array \n";
+    }
+}
+
+
+void MainWindow::timerEvent(QTimerEvent *event)
+{
+    /**
+      Check if any ports are available and if the port is connected, if its not, then attempt to connect
+     */
+
+    if( !port.L_isConnected() )
+    {
+        QList<QSerialPortInfo> portList = QSerialPortInfo::availablePorts();
+        if(  ui->portComboBox->count() != portList.size() )
+        {
+            ui->portComboBox->clear();
+            for(int i = 0; i < portList.size(); i ++)
+            {
+               ui->portComboBox->addItem(portList.at(i).portName());
+            }
+        }
+    }
+    else
+    {
+        killTimer(this->timerId); // no reason for the timer anymore
+        if( ui->setButton->text() != "Set")   // change connect button to set button
+        {
+            ui->setButton->setText("Set");
+        }
+    }
+
+}
+
+void MainWindow::on_portComboBox_activated(int index)
+{
+    if ( !port.L_isConnected() )
+    {
+        // the port is not conneted yet so we should connect
+        QList<QSerialPortInfo> portList = QSerialPortInfo::availablePorts();
+        if(portList.size() != 0)
+        {
+            port.openPort(portList.at(index));
+        }
+    }
+}
+
+void MainWindow::on_setButton_clicked()
+{
+    // send data to port now
+    if ( port.L_isConnected() )
+    {   // we are connected so we can send the data in the textbox
+
+        bool okayToSend = true;
+        QString response = "[";  // the response we will send to the port
+
+        /* checking and appending the kc value */
+        bool isNumerical = false;
+        QString kcStr = ui->kcTextBox->text();   // get string from perent on textbox
+        float kc = kcStr.toFloat(&isNumerical);    // convert to a float value
+        if( !kcStr.isEmpty())
+        {
+            if( !isNumerical )
+            {
+                okayToSend = false;
+                QMessageBox msgBox;
+                msgBox.setText("The kc value is not numerical");
+                msgBox.exec();
+                ui->kcTextBox->clear();
+            }
+            else
+            {   // its okay
+                response.append(kcStr);
+                response.append(",");
+            }
+        } else { response.append("_,"); }
+
+        /* checking and appending the taui value */
+        isNumerical = false;
+        QString tauiStr = ui->tauiTextBox->text();   // get string from perent on textbox
+        if( !tauiStr.isEmpty() )
+        {
+            float taui = tauiStr.toFloat(&isNumerical);    // convert to a float value
+            if( !isNumerical )
+            {
+                okayToSend = false;
+                QMessageBox msgBox;
+                msgBox.setText("The Taui value is not numerical");
+                msgBox.exec();
+                ui->tauiTextBox->clear();
+            }
+            else
+            {   // its okay
+                response.append(tauiStr);
+                response.append(",");
+            }
+        } else { response.append("_,"); }
+
+        /* checking and appending the taui value */
+        isNumerical = false;
+        QString taudStr = ui->taudTextBox->text();   // get string from perent on textbox
+        float taud = taudStr.toFloat(&isNumerical);    // convert to a float value
+        if( !taudStr.isEmpty())
+        {
+            if( !isNumerical )
+            {
+                okayToSend = false;
+                QMessageBox msgBox;
+                msgBox.setText("The Taud value is not numerical");
+                msgBox.exec();
+                ui->taudTextBox->clear();
+            }
+            else
+            {   // its okay
+                response.append(taudStr);
+                response.append(",");
+            }
+        } else { response.append("_,"); }
+
+        /* checking and appending the tauf value */
+        isNumerical = false;
+        QString taufStr = ui->taufTextBox->text();   // get string from perent on textbox
+        float tauf = taufStr.toFloat(&isNumerical);    // convert to a float value
+        if( !taufStr.isEmpty() )
+        {
+            if( !isNumerical )
+            {
+                okayToSend = false;
+                QMessageBox msgBox;
+                msgBox.setText("The Tauf value is not numerical");
+                msgBox.exec();
+                ui->taufTextBox->clear();
+            }
+            else
+            {   // its okay
+                response.append(taufStr);
+                response.append(",");
+            }
+        } else { response.append("_,"); }
+
+        // todo: need switches for control mode and filter mode
+        response.append("1,1]");
+
+        if ( okayToSend )
+            emit this->response(response);
+    }
+    else
+    {  // if we arent connect then emit a signal as if the user clicked the first option in the combobox
+        emit this->on_portComboBox_activated(0);
     }
 }
 
@@ -158,78 +307,4 @@ bool MainWindow::deserializeArray(const char* const input, unsigned int output_s
    }
    p = input;
    return true;
-}
-
-void MainWindow::timerEvent(QTimerEvent *event)
-{
-    if( !port.L_isConnected() )
-    {
-        QList<QSerialPortInfo> portList = QSerialPortInfo::availablePorts();
-        if(  ui->portComboBox->count() != portList.size() )
-        {
-            ui->portComboBox->clear();
-            for(int i = 0; i < portList.size(); i ++)
-            {
-               ui->portComboBox->addItem(portList.at(i).portName());
-            }
-        }
-    }
-    else
-    {
-        killTimer(this->timerId); // no reason for the timer anymore
-        if( ui->setButton->text() != "Set")
-        {
-            ui->setButton->setText("Set");
-        }
-    }
-
-}
-
-void MainWindow::on_portComboBox_activated(int index)
-{
-    if ( !port.L_isConnected() )
-    {  // the port is not conneted yet so we should connect
-        QList<QSerialPortInfo> portList = QSerialPortInfo::availablePorts();
-        if(portList.size() != 0)
-        {
-            port.openPort(portList.at(index));
-        }
-    }
-}
-
-void MainWindow::on_setButton_clicked()
-{
-    // send data to port now
-    if ( port.L_isConnected() )
-    {   // we are connected so we can send the data in the textbox
-        bool isNumerical = false;
-        QString pOnStr = ui->percentOnInput->text();   // get string from perent on textbox
-        float pOn = pOnStr.toFloat(&isNumerical);    // convert to a float value
-        if( !isNumerical )
-        {
-            // the user input is not a valid number
-            QMessageBox msgBox;
-            msgBox.setText("The percent on value is not numerical");
-            msgBox.exec();
-            ui->percentOnInput->clear();
-        }
-        else if ( pOn > 100 || pOn < 0 ) // ensure the not out of range of a reasonable percent on value
-        {
-            QMessageBox msgBox;
-            msgBox.setText("The percent on value is out of range");
-            msgBox.exec();
-            ui->percentOnInput->clear();
-        }
-        else
-        {
-            // its okay
-            pOnStr.prepend("[");
-            pOnStr.append("]");
-            emit this->response(pOnStr);
-        }
-    }
-    else
-    {  // as if the user clicked the first option in the combobox
-        emit this->on_portComboBox_activated(0);
-    }
 }

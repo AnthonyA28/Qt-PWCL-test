@@ -60,16 +60,24 @@ private:
 
     /*  Some values shared between the arduino code and the this program */
     // specific for the game
-    const unsigned int i_percentOn     = 0;       // for input & output
-    const unsigned int i_setPoint      = 1;       // for input & output
-    const unsigned int i_fanSpeed      = 2;       // for input & output
-    const unsigned int i_temperature   = 3;      // for input
-    const unsigned int i_tempFiltered  = 4;      // for input
-    const unsigned int i_time          = 5;      // for input
-    const unsigned int i_input_var     = 6;      // for input
-    const unsigned int i_avg_err       = 7;      // for input
-    const unsigned int i_score         = 8;      // for input
-    const unsigned int numInputs       = 9;
+    const unsigned int i_kc            = 0;       // for input & output
+    const unsigned int i_tauI          = 1;       // for input & output
+    const unsigned int i_tauD          = 2;       // for input & output
+    const unsigned int i_tauF          = 3;       // for input & output
+    const unsigned int i_positionForm  = 4;       // for input & output
+    const unsigned int i_filterAll     = 5;       // for input & output
+    const unsigned int i_mode          = 6;       // for input & output
+    const unsigned int i_setPoint      = 7;       // for input & output
+    const unsigned int i_percentOn     = 8;       // for input & output
+    const unsigned int i_fanSpeed      = 9;       // for input & output
+    const unsigned int i_temperature   = 10;      // for input
+    const unsigned int i_tempFiltered  = 11;      // for input
+    const unsigned int i_time          = 12;      // for input
+    const unsigned int i_input_var     = 13;      // for input
+    const unsigned int i_avg_err       = 14;      // for input
+    const unsigned int i_score         = 15;      // for input
+    const unsigned int numInputs       = 16;
+
     std::vector<float> inputs;
 };
 
