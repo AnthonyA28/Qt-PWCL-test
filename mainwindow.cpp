@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    this->timerId = startTimer(1000);  // timer is used to repeatedly check for port data until we are connected
+    this->timerId = startTimer(250);  // timer is used to repeatedly check for port data until we are connected
     this->inputs = std::vector<float>(this->numInputs); // initialize the input vector to hold the input values from the port
 
     connect(&port, &PORT::request, this, &MainWindow::showRequest);     // when the port recieves data it will emit PORT::request thus calling MainWindow::showRequest
@@ -115,7 +115,14 @@ void MainWindow::showRequest(const QString &req)
         stream.flush();
 
 
-//        this->sendParameters();
+        // Show the current values from the port in the current parameters area
+        ui->kcLabel->setNum(inputs[i_kc]);
+        ui->tauiLabel->setNum(inputs[i_tauI]);
+        ui->taudLabel->setNum(inputs[i_tauD]);
+        ui->taufLabel->setNum(inputs[i_tauF]);
+        ui->avgerrLabel->setNum(inputs[i_avg_err]);
+        ui->inputVarLabel->setNum(inputs[i_input_var]);
+        ui->scoreLabel->setNum(inputs[i_score]);
 
     }
     else
@@ -221,8 +228,17 @@ void MainWindow::on_setButton_clicked()
                 }
             } else { response.append("_,"); }
 
-            // todo: need switches for control mode and filter mode
-            response.append("1,1]");
+            // todo: neeed to do a check if the modes are out of line #p1
+
+
+            if( ui->filterAllCheckBox->isChecked() ){
+                response.append("1,");}
+            else{ response.append("_,");}
+            if( ui->posFormCheckBox->isChecked() ){
+                response.append("1,");}
+            else{response.append("_,");}
+            response.append("]");
+
 
             if ( okayToSend && valuesUpdated )
                 emit this->response(response);
@@ -424,4 +440,14 @@ bool MainWindow::deserializeArray(const char* const input, unsigned int output_s
    }
    p = input;
    return true;
+}
+
+void MainWindow::on_posFormCheckBox_stateChanged(int arg1)
+{
+    emit on_setButton_clicked();
+}
+
+void MainWindow::on_filterAllCheckBox_stateChanged(int arg1)
+{
+    emit on_setButton_clicked();
 }

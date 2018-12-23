@@ -47,6 +47,10 @@ private slots:
     void on_portComboBox_activated(int index);
     void on_setButton_clicked();
 
+    void on_posFormCheckBox_stateChanged(int arg1);
+
+    void on_filterAllCheckBox_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     bool deserializeArray(const char* const input, unsigned int output_size, std::vector<float>& output);
