@@ -74,7 +74,6 @@ MainWindow::~MainWindow()
     }
     this->csvdoc.close();
 
-
     delete ui;
 }
 
@@ -83,11 +82,6 @@ void MainWindow::showRequest(const QString &req)
     if(this->deserializeArray(req.toStdString().c_str(), this->numInputs, this->inputs))
     {
         ui->outputTable->insertRow(ui->outputTable->rowCount()); // create a new row
-
-        // todo: fix the condition here inputs size is larger than the amount of columns
-
-        QString tmpStr;
-
 
         /* add a string of each value into each column at the last row in the outputTable */
         ui->outputTable->setItem(ui->outputTable->rowCount()-1, 0, new QTableWidgetItem(QString::number(inputs[i_time])));
@@ -124,11 +118,11 @@ void MainWindow::showRequest(const QString &req)
         ui->inputVarLabel->setNum(inputs[i_input_var]);
         ui->scoreLabel->setNum(inputs[i_score]);
 
+
+      emit this->on_setButton_clicked();
     }
     else
-    {
         qDebug() << "ERROR Failed to deserialize array \n";
-    }
 }
 
 
@@ -137,122 +131,93 @@ void MainWindow::on_setButton_clicked()
 {
     // send data to port now
     if ( port.L_isConnected() )
-    {
-        // send data to port now
-        if ( port.L_isConnected() )
-        {   // we are connected so we can send the data in the textbox
+    {   // we are connected so we can send the data in the textbox
 
-            bool valuesUpdated = false;
-            bool okayToSend = true;
-            QString response = "[";  // the response we will send to the port
+        bool valuesUpdated = false;
+        QString response;
 
-            /* checking and appending the kc value */
-            bool isNumerical = false;
-            QString kcStr = ui->kcTextBox->text();   // get string from perent on textbox
-            float kc = kcStr.toFloat(&isNumerical);    // convert to a float value
-            if( !kcStr.isEmpty()) {
-                if( !isNumerical ) {
-                    okayToSend = false;
+        /*
+         * Lambda expression used to automate filling the output array from input in the textboxes
+         */
+        auto fillArrayAtNextIndex = [&response, &valuesUpdated] (double oldVal, QString name, QLineEdit* textBox)
+        {
+            double eps = 0.01;
+            QString valStr = textBox->text();
+            bool isNumerical;
+            float val = valStr.toFloat(&isNumerical);    // convert to a float value
+            if( !valStr.isEmpty() )
+            {
+                if( !isNumerical )
+                {
                     QMessageBox msgBox;
-                    msgBox.setText("The kc value is not numerical");
+                    msgBox.setText(name + " is not valid" );
                     msgBox.exec();
-                    ui->kcTextBox->clear();
+                    textBox->clear();
+                    response.append("_");
+                    return;
                 }
-                else
-                {   // its okay
-                    response.append(kcStr);
-                    response.append(",");
-                    if ( qFabs(kc) - qFabs(this->inputs[i_kc]) > 0.01  )
+                else{   // its okay.. lets see if it is different than last measured value
+                    if( qFabs(val - oldVal) > eps)
+                    {
+                        response.append(valStr);
                         valuesUpdated = true;
+                    } else
+                        response.append("_");
+                    return;
                 }
-            } else { response.append("_,"); }
+            }
+            response.append("_");
+            return;
+        };
 
-            /* checking and appending the taui value */
-            isNumerical = false;
-            QString tauiStr = ui->tauiTextBox->text();   // get string from perent on textbox
-            if( !tauiStr.isEmpty() ) {
-                float taui = tauiStr.toFloat(&isNumerical);    // convert to a float value
-                if( !isNumerical ) {
-                    okayToSend = false;
-                    QMessageBox msgBox;
-                    msgBox.setText("The Taui value is not numerical");
-                    msgBox.exec();
-                    ui->tauiTextBox->clear();
-                }
-                else
-                {   // its okay
-                    response.append(tauiStr);
-                    response.append(",");
-                    if ( qFabs(taui) - qFabs(this->inputs[i_tauI]) > 0.01  )
-                        valuesUpdated = true;
-                }
-            } else { response.append("_,"); }
+            /* use the fillArrNextIndex to place the value from the text box
+               into the array if it is different than the last recieved value,
+               otherwise it will send an underscore signifying not to change the val
+            */
+        response = "[";
+        fillArrayAtNextIndex(inputs[i_kc],   "Kc", ui->kcTextBox);     response.append(",");
+        fillArrayAtNextIndex(inputs[i_tauI], "TauI", ui->tauiTextBox); response.append(",");
+        fillArrayAtNextIndex(inputs[i_tauD], "tauD", ui->taudTextBox); response.append(",");
+        fillArrayAtNextIndex(inputs[i_tauF], "TauF", ui->taufTextBox); response.append(",");
 
-            /* checking and appending the taui value */
-            isNumerical = false;
-            QString taudStr = ui->taudTextBox->text();   // get string from perent on textbox
-            float taud = taudStr.toFloat(&isNumerical);    // convert to a float value
-            if( !taudStr.isEmpty()) {
-                if( !isNumerical ) {
-                    okayToSend = false;
-                    QMessageBox msgBox;
-                    msgBox.setText("The Taud value is not numerical");
-                    msgBox.exec();
-                    ui->taudTextBox->clear();
-                }
-                else {   // its okay
-                    response.append(taudStr);
-                    response.append(",");
-                    if ( qFabs(taud) - qFabs(this->inputs[i_tauD]) > 0.01  )
-                        valuesUpdated = true;
-                }
-            } else { response.append("_,"); }
+            /* If checkboxxes reflect differen modes than last read
+                when unchecked tha values should be zero
+                but they are floats so its safer to check size compared to 0.1
+            */
 
-            /* checking and appending the tauf value */
-            isNumerical = false;
-            QString taufStr = ui->taufTextBox->text();   // get string from perent on textbox
-            float tauf = taufStr.toFloat(&isNumerical);    // convert to a float value
-            if( !taufStr.isEmpty() ){
-                if( !isNumerical ){
-                    okayToSend = false;
-                    QMessageBox msgBox;
-                    msgBox.setText("The Tauf value is not numerical");
-                    msgBox.exec();
-                    ui->taufTextBox->clear();
-                }
-                else{   // its okay
-                    response.append(taufStr);
-                    response.append(",");
-                    if ( qFabs(tauf) - qFabs(this->inputs[i_tauF]) > 0.01  )
-                        valuesUpdated = true;
-                }
-            } else { response.append("_,"); }
-
-            // todo: neeed to do a check if the modes are out of line #p1
-
-
-            if( ui->filterAllCheckBox->isChecked() ){
-                response.append("1,");}
-            else{ response.append("_,");}
-            if( ui->posFormCheckBox->isChecked() ){
-                response.append("1,");}
-            else{response.append("_,");}
-            response.append("]");
-
-
-            if ( okayToSend && valuesUpdated )
-                emit this->response(response);
+        if ( qFabs(inputs[i_filterAll]) < 0.1  && ui->filterAllCheckBox->isChecked() )
+        {
+            qDebug() << " diffs filter : old: " << inputs[i_filterAll] << "  and checked \n";
+            valuesUpdated = true;
         }
-        else
-        {  // if we arent connect then emit a signal as if the user clicked the first option in the combobox
-            emit this->on_portComboBox_activated(0);
+        if ( qFabs(inputs[i_filterAll]) > 0.1  && !ui->filterAllCheckBox->isChecked() )
+        {
+            qDebug() << " diffs filter : old: " << inputs[i_filterAll] << "  and checked \n";
+            valuesUpdated = true;
         }
+        if ( qFabs(inputs[i_positionForm]) < 0.1  && ui->posFormCheckBox->isChecked() )
+        {
+            qDebug() << " diffs form : old: " << inputs[i_positionForm] << "  and checked \n";
+            valuesUpdated = true;
+        }
+        if ( qFabs(inputs[i_positionForm]) > 0.1  && !ui->posFormCheckBox->isChecked() )
+        {
+            qDebug() << " diffs form : old: " << inputs[i_positionForm] << "  and checked \n";
+            valuesUpdated = true;
+        }
+        response.append( ui->posFormCheckBox->isChecked()   ? "1," : "0," );
+        response.append( ui->filterAllCheckBox->isChecked() ? "1]" : "0]" );
+
+        if ( valuesUpdated  )  // this must be checked after calling fillArrayAtNextIndex because that checked if values are updated
+            emit this->response(response);
     }
     else
     {  // if we arent connect then emit a signal as if the user clicked the first option in the combobox
         emit this->on_portComboBox_activated(0);
     }
+
 }
+
 
 void MainWindow::timerEvent(QTimerEvent *event)
 {
@@ -277,115 +242,14 @@ void MainWindow::timerEvent(QTimerEvent *event)
         killTimer(this->timerId); // no reason for the timer anymore
         if( ui->setButton->text() != "Set")   // change connect button to set button
         {
-            ui->setButton->setText("Set");
+            ui->setButton->setText("Connected");
+            ui->setButton->setEnabled(false);
+            ui->portComboBox->setEnabled(false);
         }
     }
 
 }
 
-//void MainWindow::sendParameters()
-//{
-//    // send data to port now
-//    if ( port.L_isConnected() )
-//    {   // we are connected so we can send the data in the textbox
-
-//        bool valuesUpdated = false;
-//        bool okayToSend = true;
-//        QString response = "[";  // the response we will send to the port
-
-//        /* checking and appending the kc value */
-//        bool isNumerical = false;
-//        QString kcStr = ui->kcTextBox->text();   // get string from perent on textbox
-//        float kc = kcStr.toFloat(&isNumerical);    // convert to a float value
-//        if( !kcStr.isEmpty()) {
-//            if( !isNumerical ) {
-//                okayToSend = false;
-//                QMessageBox msgBox;
-//                msgBox.setText("The kc value is not numerical");
-//                msgBox.exec();
-//                ui->kcTextBox->clear();
-//            }
-//            else
-//            {   // its okay
-//                response.append(kcStr);
-//                response.append(",");
-//                if ( qFabs(kc) - qFabs(this->inputs[i_kc]) > 0.01  )
-//                    valuesUpdated = true;
-//            }
-//        } else { response.append("_,"); }
-
-//        /* checking and appending the taui value */
-//        isNumerical = false;
-//        QString tauiStr = ui->tauiTextBox->text();   // get string from perent on textbox
-//        if( !tauiStr.isEmpty() ) {
-//            float taui = tauiStr.toFloat(&isNumerical);    // convert to a float value
-//            if( !isNumerical ) {
-//                okayToSend = false;
-//                QMessageBox msgBox;
-//                msgBox.setText("The Taui value is not numerical");
-//                msgBox.exec();
-//                ui->tauiTextBox->clear();
-//            }
-//            else
-//            {   // its okay
-//                response.append(tauiStr);
-//                response.append(",");
-//                if ( qFabs(taui) - qFabs(this->inputs[i_tauI]) > 0.01  )
-//                    valuesUpdated = true;
-//            }
-//        } else { response.append("_,"); }
-
-//        /* checking and appending the taui value */
-//        isNumerical = false;
-//        QString taudStr = ui->taudTextBox->text();   // get string from perent on textbox
-//        float taud = taudStr.toFloat(&isNumerical);    // convert to a float value
-//        if( !taudStr.isEmpty()) {
-//            if( !isNumerical ) {
-//                okayToSend = false;
-//                QMessageBox msgBox;
-//                msgBox.setText("The Taud value is not numerical");
-//                msgBox.exec();
-//                ui->taudTextBox->clear();
-//            }
-//            else {   // its okay
-//                response.append(taudStr);
-//                response.append(",");
-//                if ( qFabs(taud) - qFabs(this->inputs[i_tauD]) > 0.01  )
-//                    valuesUpdated = true;
-//            }
-//        } else { response.append("_,"); }
-
-//        /* checking and appending the tauf value */
-//        isNumerical = false;
-//        QString taufStr = ui->taufTextBox->text();   // get string from perent on textbox
-//        float tauf = taufStr.toFloat(&isNumerical);    // convert to a float value
-//        if( !taufStr.isEmpty() ){
-//            if( !isNumerical ){
-//                okayToSend = false;
-//                QMessageBox msgBox;
-//                msgBox.setText("The Tauf value is not numerical");
-//                msgBox.exec();
-//                ui->taufTextBox->clear();
-//            }
-//            else{   // its okay
-//                response.append(taufStr);
-//                response.append(",");
-//                if ( qFabs(tauf) - qFabs(this->inputs[i_tauF]) > 0.01  )
-//                    valuesUpdated = true;
-//            }
-//        } else { response.append("_,"); }
-
-//        // todo: need switches for control mode and filter mode
-//        response.append("1,1]");
-
-//        if ( okayToSend && valuesUpdated )
-//            emit this->response(response);
-//    }
-//    else
-//    {  // if we arent connect then emit a signal as if the user clicked the first option in the combobox
-//        emit this->on_portComboBox_activated(0);
-//    }
-//}
 
 void MainWindow::on_portComboBox_activated(int index)
 {
@@ -442,8 +306,11 @@ bool MainWindow::deserializeArray(const char* const input, unsigned int output_s
    return true;
 }
 
+
+
 void MainWindow::on_posFormCheckBox_stateChanged(int arg1)
 {
+    qDebug() << " checko\n";
     emit on_setButton_clicked();
 }
 
