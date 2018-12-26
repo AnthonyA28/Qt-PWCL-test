@@ -52,6 +52,49 @@ MainWindow::MainWindow(QWidget *parent) :
         /* todo: figure out how to handle this #p2 */
         qDebug() << " Failed to open data.csv \n";
     }
+    /*
+     * setup the plot
+     */
+
+
+    // the set point must have a specil scatterstyle so it doesnt connect the lines
+    ui->plot->addGraph();
+    ui->plot->graph(0)->setName("Set Point");
+    ui->plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, QColor("orange"), 5));
+    ui->plot->graph(0)->setPen(QPen(Qt::white)); // so we dont see the line connecting the dots
+
+    ui->plot->addGraph();
+    ui->plot->graph(1)->setName("Temperature");
+    ui->plot->graph(1)->setPen(QPen(Qt::green));
+
+    ui->plot->addGraph();
+    ui->plot->graph(2)->setName("Temperature Filtered");
+    ui->plot->graph(2)->setPen(QPen(Qt::blue));
+
+
+    ui->plot->addGraph();
+    ui->plot->graph(3)->setName("Percent Heater on");
+    ui->plot->graph(3)->setPen(QPen(QColor("purple"))); // line color for the first graph
+    ui->plot->graph(3)->setValueAxis(ui->plot->yAxis2);
+    /*
+     * If we want the user to be able to interact with graph
+     */
+    //    ui->plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables); // dont want user interactions
+
+    ui->plot->xAxis2->setVisible(true);  // show x ticks at top
+    ui->plot->xAxis2->setVisible(false); // dont show labels at top
+    ui->plot->yAxis2->setVisible(true);  // right y axis labels
+    ui->plot->yAxis2->setTickLabels(true);  // show y ticks on right side for % on
+
+    ui->plot->yAxis2->setLabel("Heater [%]");
+    ui->plot->yAxis->setLabel("Temperature [C]");
+    ui->plot->xAxis->setLabel("Time [min]");
+
+    // setup the legend
+    ui->plot->legend->setVisible(true);
+    ui->plot->legend->setFont(QFont("Helvetica", 8));
+    ui->plot->legend->setRowSpacing(-4);  // less space between words
+    ui->plot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft|Qt::AlignTop);
 
 }
 
@@ -118,11 +161,21 @@ void MainWindow::showRequest(const QString &req)
         ui->inputVarLabel->setNum(inputs[i_input_var]);
         ui->scoreLabel->setNum(inputs[i_score]);
 
-
-      emit this->on_setButton_clicked();
+         /*
+         * update the graph
+         *
+         */
+        ui->plot->graph(3)->addData(inputs[i_time], inputs[i_percentOn]);
+        ui->plot->graph(1)->addData(inputs[i_time], inputs[i_temperature]);
+        ui->plot->graph(2)->addData(inputs[i_time], inputs[i_tempFiltered]);
+        ui->plot->graph(0)->addData(inputs[i_time], inputs[i_setPoint]);
+        ui->plot->replot( QCustomPlot::rpQueuedReplot );
+        ui->plot->rescaleAxes(); // should be in a button or somethng
     }
     else
         qDebug() << "ERROR Failed to deserialize array \n";
+
+
 }
 
 
@@ -133,13 +186,12 @@ void MainWindow::on_setButton_clicked()
     if ( port.L_isConnected() )
     {   // we are connected so we can send the data in the textbox
 
-        bool valuesUpdated = false;
         QString response;
 
         /*
          * Lambda expression used to automate filling the output array from input in the textboxes
          */
-        auto fillArrayAtNextIndex = [&response, &valuesUpdated] (double oldVal, QString name, QLineEdit* textBox)
+        auto fillArrayAtNextIndex = [&response] (double oldVal, QString name, QLineEdit* textBox)
         {
             double eps = 0.01;
             QString valStr = textBox->text();
@@ -157,13 +209,8 @@ void MainWindow::on_setButton_clicked()
                     return;
                 }
                 else{   // its okay.. lets see if it is different than last measured value
-                    if( qFabs(val - oldVal) > eps)
-                    {
                         response.append(valStr);
-                        valuesUpdated = true;
-                    } else
-                        response.append("_");
-                    return;
+                        return;
                 }
             }
             response.append("_");
@@ -180,36 +227,11 @@ void MainWindow::on_setButton_clicked()
         fillArrayAtNextIndex(inputs[i_tauD], "tauD", ui->taudTextBox); response.append(",");
         fillArrayAtNextIndex(inputs[i_tauF], "TauF", ui->taufTextBox); response.append(",");
 
-            /* If checkboxxes reflect differen modes than last read
-                when unchecked tha values should be zero
-                but they are floats so its safer to check size compared to 0.1
-            */
-
-        if ( qFabs(inputs[i_filterAll]) < 0.1  && ui->filterAllCheckBox->isChecked() )
-        {
-            qDebug() << " diffs filter : old: " << inputs[i_filterAll] << "  and checked \n";
-            valuesUpdated = true;
-        }
-        if ( qFabs(inputs[i_filterAll]) > 0.1  && !ui->filterAllCheckBox->isChecked() )
-        {
-            qDebug() << " diffs filter : old: " << inputs[i_filterAll] << "  and checked \n";
-            valuesUpdated = true;
-        }
-        if ( qFabs(inputs[i_positionForm]) < 0.1  && ui->posFormCheckBox->isChecked() )
-        {
-            qDebug() << " diffs form : old: " << inputs[i_positionForm] << "  and checked \n";
-            valuesUpdated = true;
-        }
-        if ( qFabs(inputs[i_positionForm]) > 0.1  && !ui->posFormCheckBox->isChecked() )
-        {
-            qDebug() << " diffs form : old: " << inputs[i_positionForm] << "  and checked \n";
-            valuesUpdated = true;
-        }
+        // these two have a different order in main but its okay
         response.append( ui->posFormCheckBox->isChecked()   ? "1," : "0," );
         response.append( ui->filterAllCheckBox->isChecked() ? "1]" : "0]" );
 
-        if ( valuesUpdated  )  // this must be checked after calling fillArrayAtNextIndex because that checked if values are updated
-            emit this->response(response);
+        emit this->response(response);
     }
     else
     {  // if we arent connect then emit a signal as if the user clicked the first option in the combobox

@@ -22,281 +22,6 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QTableWidget" name="outputTable">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>1</horstretch>
-          <verstretch>1</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>200</width>
-          <height>100</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="contextMenuPolicy">
-         <enum>Qt::NoContextMenu</enum>
-        </property>
-        <property name="toolTip">
-         <string notr="true"/>
-        </property>
-        <property name="statusTip">
-         <string notr="true"/>
-        </property>
-        <property name="whatsThis">
-         <string notr="true"/>
-        </property>
-        <property name="accessibleName">
-         <string notr="true"/>
-        </property>
-        <property name="accessibleDescription">
-         <string notr="true"/>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Box</enum>
-        </property>
-        <property name="lineWidth">
-         <number>1</number>
-        </property>
-        <property name="midLineWidth">
-         <number>0</number>
-        </property>
-        <property name="autoScrollMargin">
-         <number>1</number>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="tabKeyNavigation">
-         <bool>false</bool>
-        </property>
-        <property name="showDropIndicator" stdset="0">
-         <bool>false</bool>
-        </property>
-        <property name="dragDropOverwriteMode">
-         <bool>false</bool>
-        </property>
-        <property name="selectionBehavior">
-         <enum>QAbstractItemView::SelectColumns</enum>
-        </property>
-        <property name="textElideMode">
-         <enum>Qt::ElideNone</enum>
-        </property>
-        <property name="showGrid">
-         <bool>true</bool>
-        </property>
-        <property name="gridStyle">
-         <enum>Qt::SolidLine</enum>
-        </property>
-        <property name="cornerButtonEnabled">
-         <bool>false</bool>
-        </property>
-        <attribute name="horizontalHeaderCascadingSectionResizes">
-         <bool>true</bool>
-        </attribute>
-        <attribute name="horizontalHeaderHighlightSections">
-         <bool>false</bool>
-        </attribute>
-        <attribute name="horizontalHeaderMinimumSectionSize">
-         <number>20</number>
-        </attribute>
-        <attribute name="verticalHeaderVisible">
-         <bool>false</bool>
-        </attribute>
-        <attribute name="verticalHeaderDefaultSectionSize">
-         <number>26</number>
-        </attribute>
-        <attribute name="verticalHeaderHighlightSections">
-         <bool>false</bool>
-        </attribute>
-        <attribute name="verticalHeaderMinimumSectionSize">
-         <number>20</number>
-        </attribute>
-        <row>
-         <property name="text">
-          <string/>
-         </property>
-        </row>
-        <column>
-         <property name="text">
-          <string>Time 
-[min]</string>
-         </property>
-         <property name="toolTip">
-          <string notr="true"/>
-         </property>
-         <property name="whatsThis">
-          <string notr="true"/>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>8</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="textAlignment">
-          <set>AlignLeading|AlignVCenter</set>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Heater
-On [%] </string>
-         </property>
-         <property name="toolTip">
-          <string notr="true"/>
-         </property>
-         <property name="whatsThis">
-          <string notr="true"/>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>8</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Temperature
-[°C]</string>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>8</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Temperature 
-Filtered [°C]</string>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>8</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Set 
-Point [°C]</string>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>9</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Fan Speed</string>
-         </property>
-         <property name="font">
-          <font>
-           <family>MS Shell Dlg 2</family>
-           <pointsize>8</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-        </column>
-        <item row="0" column="0">
-         <property name="text">
-          <string notr="true"/>
-         </property>
-         <property name="textAlignment">
-          <set>AlignLeading|AlignTop</set>
-         </property>
-         <property name="flags">
-          <set>NoItemFlags</set>
-         </property>
-        </item>
-        <item row="0" column="1">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="textAlignment">
-          <set>AlignLeading|AlignTop</set>
-         </property>
-         <property name="flags">
-          <set>NoItemFlags</set>
-         </property>
-        </item>
-        <item row="0" column="2">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="flags">
-          <set>NoItemFlags</set>
-         </property>
-        </item>
-        <item row="0" column="3">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="flags">
-          <set>NoItemFlags</set>
-         </property>
-        </item>
-        <item row="0" column="4">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>7</pointsize>
-          </font>
-         </property>
-         <property name="flags">
-          <set>NoItemFlags</set>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPlainTextEdit" name="rawOutputTextEdit">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>80</height>
-         </size>
-        </property>
-        <property name="baseSize">
-         <size>
-          <width>100</width>
-          <height>10</height>
-         </size>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
      <layout class="QFormLayout" name="formLayout_2">
       <property name="sizeConstraint">
        <enum>QLayout::SetNoConstraint</enum>
@@ -963,6 +688,262 @@ Point [°C]</string>
       </item>
      </layout>
     </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1">
+      <item>
+       <widget class="QTableWidget" name="outputTable">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>1</horstretch>
+          <verstretch>1</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::NoContextMenu</enum>
+        </property>
+        <property name="toolTip">
+         <string notr="true"/>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="whatsThis">
+         <string notr="true"/>
+        </property>
+        <property name="accessibleName">
+         <string notr="true"/>
+        </property>
+        <property name="accessibleDescription">
+         <string notr="true"/>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <property name="lineWidth">
+         <number>1</number>
+        </property>
+        <property name="midLineWidth">
+         <number>0</number>
+        </property>
+        <property name="autoScrollMargin">
+         <number>1</number>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="tabKeyNavigation">
+         <bool>false</bool>
+        </property>
+        <property name="showDropIndicator" stdset="0">
+         <bool>false</bool>
+        </property>
+        <property name="dragDropOverwriteMode">
+         <bool>false</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectColumns</enum>
+        </property>
+        <property name="textElideMode">
+         <enum>Qt::ElideNone</enum>
+        </property>
+        <property name="showGrid">
+         <bool>true</bool>
+        </property>
+        <property name="gridStyle">
+         <enum>Qt::SolidLine</enum>
+        </property>
+        <property name="cornerButtonEnabled">
+         <bool>false</bool>
+        </property>
+        <attribute name="horizontalHeaderCascadingSectionResizes">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="horizontalHeaderHighlightSections">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderMinimumSectionSize">
+         <number>20</number>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderDefaultSectionSize">
+         <number>29</number>
+        </attribute>
+        <attribute name="verticalHeaderHighlightSections">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderMinimumSectionSize">
+         <number>20</number>
+        </attribute>
+        <row>
+         <property name="text">
+          <string/>
+         </property>
+        </row>
+        <column>
+         <property name="text">
+          <string>Time 
+[min]</string>
+         </property>
+         <property name="toolTip">
+          <string notr="true"/>
+         </property>
+         <property name="whatsThis">
+          <string notr="true"/>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignLeading|AlignVCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Heater
+On [%] </string>
+         </property>
+         <property name="toolTip">
+          <string notr="true"/>
+         </property>
+         <property name="whatsThis">
+          <string notr="true"/>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Temperature
+[°C]</string>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Temperature 
+Filtered [°C]</string>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Set 
+Point [°C]</string>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Fan Speed</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>MS Shell Dlg 2</family>
+           <pointsize>8</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+        </column>
+        <item row="0" column="0">
+         <property name="text">
+          <string notr="true"/>
+         </property>
+         <property name="textAlignment">
+          <set>AlignLeading|AlignTop</set>
+         </property>
+         <property name="flags">
+          <set>NoItemFlags</set>
+         </property>
+        </item>
+        <item row="0" column="1">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="textAlignment">
+          <set>AlignLeading|AlignTop</set>
+         </property>
+         <property name="flags">
+          <set>NoItemFlags</set>
+         </property>
+        </item>
+        <item row="0" column="2">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="flags">
+          <set>NoItemFlags</set>
+         </property>
+        </item>
+        <item row="0" column="3">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="flags">
+          <set>NoItemFlags</set>
+         </property>
+        </item>
+        <item row="0" column="4">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+          </font>
+         </property>
+         <property name="flags">
+          <set>NoItemFlags</set>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCustomPlot" name="plot" native="true"/>
+      </item>
+     </layout>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -986,6 +967,14 @@ Point [°C]</string>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>setButton</tabstop>
   <tabstop>kcTextBox</tabstop>
@@ -995,7 +984,6 @@ Point [°C]</string>
   <tabstop>posFormCheckBox</tabstop>
   <tabstop>filterAllCheckBox</tabstop>
   <tabstop>portComboBox</tabstop>
-  <tabstop>rawOutputTextEdit</tabstop>
  </tabstops>
  <resources/>
  <connections/>
