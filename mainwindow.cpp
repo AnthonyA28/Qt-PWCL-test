@@ -111,7 +111,7 @@ MainWindow::~MainWindow()
         QDir::setCurrent("backupFiles");
 
         QDateTime currentTime(QDateTime::currentDateTime());
-        QString dateStr = currentTime.toString("d-MMM--h-m-s-A");  // create a date title for the backup file
+        QString dateStr = currentTime.toString("d-MMM--h-m-A");  // create a date title for the backup file
         dateStr.append(".csv"); // the 's' cant be used when formatting the time string
         this->csvdoc.copy(dateStr); // save a backup file of the csv file
     }
