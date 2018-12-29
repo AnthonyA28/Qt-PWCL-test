@@ -287,14 +287,18 @@ void MainWindow::on_portComboBox_activated(int index)
 
 bool MainWindow::deserializeArray(const char* const input, unsigned int output_size,  std::vector<float> &output)
 {
-    //todo: make this better #p2
+    /*
+    Ensure that the input string has the correct format and number of numbers to be parsed
+    */
     const char*  p = input;
     unsigned int num_commas     = 0;
     unsigned int num_brackets   = 0;
-    unsigned int num_values     = 1;
-    while (*p) {
+    unsigned int num_values     = 0;
+
+    while (*p)
+    {
       if (*p == '[') { num_brackets++;
-      } else if ( *p == ']' ) {num_brackets++;
+      } else if ( *p == ']' ) {num_brackets++; num_values++;
       } else if ( *p == ',' ) {num_commas++; num_values++;
       } p++;
     }
@@ -306,24 +310,33 @@ bool MainWindow::deserializeArray(const char* const input, unsigned int output_s
         qDebug() << "(M) Parse error, input size incorrect\n";
         return false;
     }
-   char* pEnd;
-   p = input + 1;
-//    input ++;
-   for ( unsigned int i = 0; i < output_size; i ++ ){
-       if ( p[0] != '_'){
+
+
+    char* pEnd;
+    p = input + 1;
+    for ( unsigned int i = 0; i < output_size; i ++ )
+    {
+
+        bool is_a_number = false;
+        const char* nc = p; // nc will point to the next comma or the closing bracket
+        while(*nc != ',' && *nc != ']' && *nc)
+        {
+            if ( (int)*nc >= 48 && (int)*nc <= 57 )
+                is_a_number = true;
+            nc++;
+        }
+        if ( is_a_number )
+        {
            output[i] = strtof(p, &pEnd); // strtof can returns nan when parsing nans,
            // strod returns 0 when parsing nans
-           pEnd ++;
            p = pEnd;
-       } else {
-           do{
-               p++;
-           } while (*p != ',');
-           p++;
-       }
-   }
-   p = input;
-   return true;
+        }
+        while (*p != ',' && *p != ']' && *p)
+            p++;
+        p++;
+    }
+    p = input;
+    return true;
 }
 
 
