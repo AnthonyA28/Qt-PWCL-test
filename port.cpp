@@ -88,7 +88,18 @@ void PORT::run()
 
         while(!quit)
         {
+
             this->mutex.lock();
+
+            // First we ensure that the connection hasnt been disonnected
+            if( !serial.isDataTerminalReady() )
+            {
+                this->isConnected = false;
+                qDebug() << " FATAL ERROR disconnected \n";
+                emit this->disconnected();
+                break;
+            }
+
             if( this->response != "" )
             {
                 if( serial.write(this->response.toUtf8()) )
@@ -124,5 +135,3 @@ void PORT::run()
 
     } else { qDebug() << " Failed to open the port \n";}
 }
-
-

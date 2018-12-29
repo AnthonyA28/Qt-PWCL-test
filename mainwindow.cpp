@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->inputs = std::vector<float>(this->numInputs); // initialize the input vector to hold the input values from the port
 
     connect(&port, &PORT::request, this, &MainWindow::showRequest);     // when the port recieves data it will emit PORT::request thus calling MainWindow::showRequest
+    connect(&port, &PORT::disconnected, this, &MainWindow::disonnectedPopUpWindow);
     connect(this, &MainWindow::response, &port, &PORT::L_processResponse);  // whn the set button is clicked, it will emit MainWindow::response thus calling PORT::L_processResponse
 
     ui->outputTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);   // have the table resize with the window
@@ -191,14 +192,14 @@ void MainWindow::on_setButton_clicked()
         /*
          * Lambda expression used to automate filling the output array from input in the textboxes
          */
-        auto fillArrayAtNextIndex = [&response] (double oldVal, QString name, QLineEdit* textBox)
+        auto fillArrayAtNextIndex = [&response] ( QString name, QLineEdit* textBox)
         {
             QString valStr = textBox->text();
             bool isNumerical = false;
             valStr.remove(' ');
             if( !valStr.isEmpty() )
             {
-                float val = valStr.toFloat(&isNumerical);    // convert to a float value
+                float val = valStr.toFloat(&isNumerical);    // convert to a float value todo: do any range checking here #p2
                 if( !isNumerical )
                 {
                     QMessageBox msgBox;
@@ -222,10 +223,10 @@ void MainWindow::on_setButton_clicked()
                otherwise it will send an underscore signifying not to change the val
             */
         response = "[";
-        fillArrayAtNextIndex(inputs[i_kc],   "Kc", ui->kcTextBox);     response.append(",");
-        fillArrayAtNextIndex(inputs[i_tauI], "TauI", ui->tauiTextBox); response.append(",");
-        fillArrayAtNextIndex(inputs[i_tauD], "tauD", ui->taudTextBox); response.append(",");
-        fillArrayAtNextIndex(inputs[i_tauF], "TauF", ui->taufTextBox); response.append(",");
+        fillArrayAtNextIndex("Kc", ui->kcTextBox);     response.append(",");
+        fillArrayAtNextIndex("TauI", ui->tauiTextBox); response.append(",");
+        fillArrayAtNextIndex("tauD", ui->taudTextBox); response.append(",");
+        fillArrayAtNextIndex("TauF", ui->taufTextBox); response.append(",");
 
         // these two have a different order in main but its okay
         response.append( ui->posFormCheckBox->isChecked()   ? "1," : "0," );
@@ -350,4 +351,15 @@ void MainWindow::on_posFormCheckBox_stateChanged(int arg1)
 void MainWindow::on_filterAllCheckBox_stateChanged(int arg1)
 {
     emit on_setButton_clicked();
+}
+
+bool MainWindow::disonnectedPopUpWindow()
+{
+    qDebug() << "(disconnected popup window )\n";
+    QMessageBox::critical(this,
+                          "Error",
+                          "Fatal Error, device disconnected.\n"
+                          "Close and restart the application to continue.\n",
+                          QMessageBox::Ok
+                          );
 }

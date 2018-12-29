@@ -5,3 +5,5 @@ builds/
 *.xlsx
 *.csv
 qt_PWCL_test.pro.user.20
+port.cpp.bak
+*.bak

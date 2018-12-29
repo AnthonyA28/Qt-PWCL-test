@@ -31,6 +31,7 @@ private:
     bool quit;
 
 signals:
+    bool disconnected();
     void request(const QString &req);
 
 public slots:
