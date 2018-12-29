@@ -193,12 +193,12 @@ void MainWindow::on_setButton_clicked()
          */
         auto fillArrayAtNextIndex = [&response] (double oldVal, QString name, QLineEdit* textBox)
         {
-            double eps = 0.01;
             QString valStr = textBox->text();
-            bool isNumerical;
-            float val = valStr.toFloat(&isNumerical);    // convert to a float value
+            bool isNumerical = false;
+            valStr.remove(' ');
             if( !valStr.isEmpty() )
             {
+                float val = valStr.toFloat(&isNumerical);    // convert to a float value
                 if( !isNumerical )
                 {
                     QMessageBox msgBox;
@@ -264,9 +264,7 @@ void MainWindow::timerEvent(QTimerEvent *event)
         killTimer(this->timerId); // no reason for the timer anymore
         if( ui->setButton->text() != "Set")   // change connect button to set button
         {
-            ui->setButton->setText("Connected");
-            ui->setButton->setEnabled(false);
-            ui->portComboBox->setEnabled(false);
+            ui->setButton->setText("Set");
         }
     }
 
