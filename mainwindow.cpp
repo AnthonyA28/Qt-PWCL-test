@@ -358,18 +358,17 @@ bool MainWindow::deserializeArray(const char* const input, unsigned int output_s
                 is_a_number = true;
             nc++;
         }
-        if ( is_a_number )
-        {
-           output[i] = strtof(p, &pEnd); // strtof can returns nan when parsing nans,
+        float num_ = output[i] = strtof(p, &pEnd); // strtof can returns nan when parsing nans,
            // strod returns 0 when parsing nans
-           p = pEnd;
-        }
+        p = pEnd;
+        if ( is_a_number || num_ == NAN)
+            output[i] = num_;
         while (*p != ',' && *p != ']' && *p)
             p++;
         p++;
-    }
-    p = input;
-    return true;
+   }
+   p = input;
+   return true;
 }
 
 

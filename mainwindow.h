@@ -2,20 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTimer>
-#include <QtDebug>
-#include <QtSerialPort/QSerialPortInfo>
-#include <QTextCursor>
-#include <QTableWidget>
-#include <vector>
-#include <QAbstractItemView>
-#include <QFile>
-#include <QDir>
-#include <QDateTime>
-#include <QMessageBox>
-#include <QtMath>
-#include <QLineEdit>
-#include<tuple>
 
 #include "xlsxdocument.h"
 #include "xlsxchartsheet.h"
