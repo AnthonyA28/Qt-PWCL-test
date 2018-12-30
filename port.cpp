@@ -51,7 +51,7 @@ bool PORT::L_isConnected()
 }
 
 void PORT::L_processResponse(const QString &response_){
-    qDebug() << "Processing response: " << response_;
+    qDebug() << "Processing response: " << response_ << "\n";
     this->mutex.lock();
     this->response = response_; // set the input argument to the response
         // if this response is not "" it will be sent to the port and then set to ""
