@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>621</width>
-    <height>548</height>
+    <width>700</width>
+    <height>577</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -41,7 +41,7 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item row="6" column="1">
+      <item row="0" column="1">
        <widget class="QLabel" name="label_5">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -51,7 +51,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>228</width>
+          <width>304</width>
           <height>0</height>
          </size>
         </property>
@@ -65,6 +65,7 @@
          <font>
           <weight>75</weight>
           <bold>true</bold>
+          <underline>true</underline>
          </font>
         </property>
         <property name="text">
@@ -72,7 +73,7 @@
         </property>
        </widget>
       </item>
-      <item row="11" column="1">
+      <item row="1" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <property name="spacing">
          <number>10</number>
@@ -218,7 +219,7 @@
             </property>
            </widget>
           </item>
-          <item row="8" column="1">
+          <item row="4" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
              <widget class="QPushButton" name="setButton">
@@ -280,7 +281,7 @@
             </item>
            </layout>
           </item>
-          <item row="13" column="0" colspan="2">
+          <item row="5" column="0" colspan="2">
            <widget class="QCheckBox" name="posFormCheckBox">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -304,7 +305,7 @@
             </property>
            </widget>
           </item>
-          <item row="14" column="0" colspan="2">
+          <item row="6" column="0" colspan="2">
            <widget class="QCheckBox" name="filterAllCheckBox">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -332,7 +333,7 @@
         </item>
        </layout>
       </item>
-      <item row="12" column="1">
+      <item row="2" column="1">
        <layout class="QFormLayout" name="formLayout_3">
         <property name="labelAlignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -408,22 +409,160 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="label_6">
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_14">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="maximumSize">
            <size>
-            <width>16</width>
+            <width>16777214</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Input Variance:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="inputVarLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>141</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>not available</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_15">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777214</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Average Squared Error:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="avgerrLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>141</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>not available</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777214</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Score:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="scoreLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;not available&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>90</width>
             <height>16777215</height>
            </size>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;K&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;C&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;K&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;C&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -449,19 +588,19 @@
         <item row="6" column="0">
          <widget class="QLabel" name="label_10">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="maximumSize">
            <size>
-            <width>14</width>
+            <width>90</width>
             <height>16777215</height>
            </size>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;I&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;I&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -487,19 +626,19 @@
         <item row="7" column="0">
          <widget class="QLabel" name="label_16">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="maximumSize">
            <size>
-            <width>17</width>
+            <width>90</width>
             <height>16777215</height>
            </size>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;D&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;D&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -525,19 +664,19 @@
         <item row="8" column="0">
          <widget class="QLabel" name="label_12">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="maximumSize">
            <size>
-            <width>16</width>
+            <width>90</width>
             <height>16777215</height>
            </size>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;F&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;F&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -560,7 +699,7 @@
           </property>
          </widget>
         </item>
-        <item row="13" column="0" colspan="2">
+        <item row="9" column="0" colspan="2">
          <widget class="Line" name="line_2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -594,97 +733,21 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_14">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>83</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Input Variance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_15">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>137</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Average Squared Error&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>Score</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="scoreLabel">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="avgerrLabel">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>141</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="inputVarLabel">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>141</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
        </layout>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel" name="scoreRankLabel">
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -951,7 +1014,7 @@ Point [°C]</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>621</width>
+     <width>700</width>
      <height>26</height>
     </rect>
    </property>

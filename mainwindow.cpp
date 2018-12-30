@@ -158,9 +158,41 @@ void MainWindow::showRequest(const QString &req)
         ui->tauiLabel->setNum(inputs[i_tauI]);
         ui->taudLabel->setNum(inputs[i_tauD]);
         ui->taufLabel->setNum(inputs[i_tauF]);
-        ui->avgerrLabel->setNum(inputs[i_avg_err]);
-        ui->inputVarLabel->setNum(inputs[i_input_var]);
-        ui->scoreLabel->setNum(inputs[i_score]);
+        float show_error_and_inputVar_time = 12.0; // time after which we want to show average error and input variance
+        float show_score_time = 29.0; // time after which we show the score
+        if( inputs[i_time] > show_error_and_inputVar_time ) // only show the input variance after input exclusion time
+        {
+            ui->avgerrLabel->setNum(inputs[i_avg_err]);
+            ui->inputVarLabel->setNum(inputs[i_input_var]);
+        }
+        if ( inputs[i_time] > show_score_time )
+            ui->scoreLabel->setNum(inputs[i_score]); // todo: should only show this after
+
+
+        /*
+         * After 29 minutes we show the score
+         * score > 10.0         professional crash test dummy.
+         * 10.0 >= score > 3.0  Accident waiting to happen.
+         * 3.0  >= score > 1.5  Proud owner of a learners permit.
+         * 1.5  >= score > 0.8  Control Student.
+         * 0.8  >= score        Control Master.
+        */
+
+        if (inputs[i_time] > 29.0) {
+            char rankString[200];
+            snprintf(rankString, sizeof(rankString), "Professional Crash test dummy\n");
+            if (inputs[i_score] <= 10.0) {
+                if (inputs[i_score] <= 3.0) {
+                    if (inputs[i_score] <= 1.5) {
+                        if (inputs[i_score] <= 0.8) {
+                                  snprintf(rankString, sizeof(rankString), "Control Master\n");
+                        } else {  snprintf(rankString, sizeof(rankString), "Control Student\n") ; }
+                    } else {      snprintf(rankString, sizeof(rankString), "Proud owner of a learners permit\n") ; }
+                } else {          snprintf(rankString, sizeof(rankString), "Accident waiting to happen\n") ; }
+            }
+            qDebug() << "rank output string: " << rankString << "\n";
+            ui->scoreRankLabel->setText(rankString);
+        }
 
          /*
          * update the graph
