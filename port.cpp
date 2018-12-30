@@ -97,7 +97,7 @@ void PORT::run()
                 this->isConnected = false;
                 qDebug() << " FATAL ERROR disconnected \n";
                 emit this->disconnected();
-                break;
+                quit = true;
             }
 
             if( this->response != "" )
@@ -134,4 +134,5 @@ void PORT::run()
         }
 
     } else { qDebug() << " Failed to open the port \n";}
+    qDebug() << " Concluding thread \n";
 }
