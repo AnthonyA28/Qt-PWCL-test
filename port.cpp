@@ -104,7 +104,7 @@ void PORT::run()
             {
                 if( serial.write(this->response.toUtf8()) )
                 {
-                    qDebug() << " sent to port: " << this->response;
+                    qDebug() << " sent to port: " << this->response << "\n";
                 } else {
                     qDebug() << " Failed to write to port: " << this->response;
                 }
