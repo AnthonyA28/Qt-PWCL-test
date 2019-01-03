@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-/*
+/**
 *   Called when the application is first opened.
 *   Configures main window, log files, and more..
 */
@@ -76,8 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // open the csv file and give it a header
     this->csvdoc.setFileName(this->csvFileName);
-    if( this->csvdoc.open(QIODevice::Truncate | QIODevice::WriteOnly | QIODevice::Text) )
-    {
+    if (this->csvdoc.open(QIODevice::Truncate | QIODevice::WriteOnly | QIODevice::Text)){
         QTextStream stream(&this->csvdoc);
         stream << "Time, percent on, Temp, Temp filtered, Set Point\n";
     }
@@ -133,7 +132,7 @@ MainWindow::MainWindow(QWidget *parent) :
 */
 MainWindow::~MainWindow()
 {
-    if( this->port.L_isConnected()){
+    if (this->port.L_isConnected()) {
         
         // Ensure we have a specified directory named backup. Create it if not
         QDir backupDir("backupFiles");
@@ -260,6 +259,7 @@ void MainWindow::showRequest(const QString &req)
 }
 
 
+
 /**
 *   Called when the user clicks the set button.
 *   creates a string from the values in the textboxes and sends it to the port.
@@ -276,8 +276,7 @@ void MainWindow::on_setButton_clicked()
         *  Ensures the value inputted in the textBox is within range min and max
         *  returns '_' if the value is no good. When the arduino recieves '_' it wont change the value. 
         */
-        auto fillArrayAtNextIndex = [&response]
-                ( QString name, QLineEdit* textBox, double min = NAN, double max = NAN)
+        auto fillArrayAtNextIndex = [&response] ( QString name, QLineEdit* textBox, double min = NAN, double max = NAN)
         {
             QString valStr = textBox->text();   // 'valStr' is a string holding what the user inputted in the texbox
             bool isNumerical = false;
@@ -334,6 +333,7 @@ void MainWindow::on_setButton_clicked()
         response.append(",");
 
         // these two have a different order in the main program but its okay
+        // todo: consider fixing that #p2
         response.append( ui->posFormCheckBox->isChecked()   ? "1," : "0," );
         response.append( ui->filterAllCheckBox->isChecked() ? "1]" : "0]" );
 
@@ -343,7 +343,6 @@ void MainWindow::on_setButton_clicked()
         *  if we arent connect then emit a signal as if the user clicked the first option in the combobox
         *  and therefore a connection will be attempted. 
         */ 
-
         emit this->on_portComboBox_activated(0);
     }
 
@@ -483,7 +482,6 @@ void MainWindow::on_filterAllCheckBox_stateChanged(int arg1)
 */
 bool MainWindow::disonnectedPopUpWindow()
 {
-    qDebug() << "(disconnected popup window )\n";
     QMessageBox::critical(this,
                           "Error",
                           "Fatal Error, device disconnected.\n"
