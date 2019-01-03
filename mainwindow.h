@@ -58,18 +58,24 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    bool deserializeArray(const char* const input, unsigned int output_size, std::vector<float>& output);
+    
+    
     int timerId;
     void timerEvent(QTimerEvent *event);
     PORT port;
+
     QString csvFileName;
     QString excelFileName;
-
     QXlsx::Document xldoc;
     QFile csvdoc;
 
-    /*  Some values shared between the arduino code and the this program */
-    // specific for the game
+    
+    bool deserializeArray(const char* const input, unsigned int output_size, std::vector<float>& output);
+    std::vector<float> inputs;  // Holds values read from the port ordered below 
+    
+    /*
+    * Assign the index in which these values will exist in the 'inputs' and 'outputs' arrays
+    */
     const unsigned int i_kc            = 0;       // for input & output
     const unsigned int i_tauI          = 1;       // for input & output
     const unsigned int i_tauD          = 2;       // for input & output
@@ -88,7 +94,6 @@ private:
     const unsigned int i_score         = 15;      // for input
     const unsigned int numInputs       = 16;
 
-    std::vector<float> inputs;
 };
 
 #endif // MAINWINDOW_H
