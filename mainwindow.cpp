@@ -162,12 +162,13 @@ void MainWindow::showRequest(const QString &req)
         stream << file_output_buffer;
         stream.flush();
 
-
         // Show the current values from the port in the current parameters area
+        
         ui->kcLabel->setNum(inputs[i_kc]);
         ui->tauiLabel->setNum(inputs[i_tauI]);
         ui->taudLabel->setNum(inputs[i_tauD]);
         ui->taufLabel->setNum(inputs[i_tauF]);
+        
         float show_error_and_inputVar_time = 12.0; // time after which we want to show average error and input variance
         float show_score_time = 29.0; // time after which we show the score
         if( inputs[i_time] > show_error_and_inputVar_time ) // only show the input variance after input exclusion time
@@ -176,8 +177,13 @@ void MainWindow::showRequest(const QString &req)
             ui->inputVarLabel->setNum(inputs[i_input_var]);
         }
         if ( inputs[i_time] > show_score_time )
-            ui->scoreLabel->setNum(inputs[i_score]); // todo: should only show this after
-
+            ui->scoreLabel->setNum(inputs[i_score]);
+        
+        QString ModeString = " ";  // holds a string for current mode ex. "Velocity form, Filtering all terms"
+        if ( inputs[i_positionForm]  ) ModeString.append("Position Form ");
+        else ModeString.append("Velocity Form");
+        if ( inputs[i_filterAll] ) ModeString.append("\nFiltering all terms");
+        ui->modeTextLabel->setText(ModeString); 
 
         /*
          * After 29 minutes we show the score
@@ -204,10 +210,7 @@ void MainWindow::showRequest(const QString &req)
             ui->scoreRankLabel->setText(rankString);
         }
 
-         /*
-         * update the graph
-         *
-         */
+        // update the graph
         ui->plot->graph(3)->addData(inputs[i_time], inputs[i_percentOn]);
         ui->plot->graph(1)->addData(inputs[i_time], inputs[i_temperature]);
         ui->plot->graph(2)->addData(inputs[i_time], inputs[i_tempFiltered]);
