@@ -1,9 +1,11 @@
-# qt_PC_gui_test
 
 ## Qt based Process Controller Graphical User Interface, Test version
 
 Provides a graphical user interface for changing parameters and logging/graphing data from an Arduino based process controller. 
 
+Uses the [QXlsx library](https://github.com/j2doll/QXlsx) for logging data to Excel. 
+
+Uses the [ QCustomPlot ](http://www.qcustomplot.com/) library for live graphing. 
 
 
 ## Installation
