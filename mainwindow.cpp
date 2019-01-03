@@ -67,14 +67,11 @@ MainWindow::MainWindow(QWidget *parent) :
         stream << "Time, percent on, Temp, Temp filtered, Set Point\n";
     }
     else
-    {
-        /* todo: figure out how to handle this #p2 */
         qDebug() << " Failed to open data.csv \n";
-    }
+
     /*
      * setup the plot
      */
-
 
     // the set point must have a specil scatterstyle so it doesnt connect the lines
     ui->plot->addGraph();
@@ -90,15 +87,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->plot->graph(2)->setName("Temperature Filtered");
     ui->plot->graph(2)->setPen(QPen(Qt::blue));
 
-
     ui->plot->addGraph();
     ui->plot->graph(3)->setName("Percent Heater on");
     ui->plot->graph(3)->setPen(QPen(QColor("purple"))); // line color for the first graph
     ui->plot->graph(3)->setValueAxis(ui->plot->yAxis2);
-    /*
-     * If we want the user to be able to interact with graph
-     */
-    //    ui->plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables); // dont want user interactions
 
     ui->plot->xAxis2->setVisible(true);  // show x ticks at top
     ui->plot->xAxis2->setVisible(false); // dont show labels at top
@@ -242,14 +234,16 @@ void MainWindow::on_setButton_clicked()
         /*
          * Lambda expression used to automate filling the output array from input in the textboxes
          */
-        auto fillArrayAtNextIndex = [&response] ( QString name, QLineEdit* textBox)
+        // Lambda expression used to automate filling the output array from input in the textboxes
+        auto fillArrayAtNextIndex = [&response]
+                ( QString name, QLineEdit* textBox, double min = NAN, double max = NAN)
         {
-            QString valStr = textBox->text();
+            QString valStr = textBox->text();   // 'valStr' is a string holding what the user inputted in the texbox
             bool isNumerical = false;
-            valStr.remove(' ');
+            valStr.remove(' ');  // remove any extra spaces
             if( !valStr.isEmpty() )
             {
-                float val = valStr.toFloat(&isNumerical);    // convert to a float value todo: do any range checking here #p2
+                float val = valStr.toFloat(&isNumerical);    // convert to a float value
                 if( !isNumerical )
                 {
                     QMessageBox msgBox;
@@ -259,9 +253,29 @@ void MainWindow::on_setButton_clicked()
                     response.append("_");
                     return;
                 }
-                else{   // its okay.. lets see if it is different than last measured value
-                        response.append(valStr);
+                else{
+                    // ensure the value is within range
+                    if ( max != NAN && val > max )  // max is NAN if it is unconstrained
+                    {
+                        QMessageBox msgBox;
+                        msgBox.setText(name + " of " + QString::number(val) + " is over the maximum of " + QString::number(max) );
+                        msgBox.exec();
+                        textBox->clear();
+                        response.append("_");
                         return;
+                    }
+                    if  ( min != NAN && val < min )  // min is NAN if it is unconstrained
+                    {
+                        QMessageBox msgBox;
+                        msgBox.setText(name + " of " + QString::number(val) + " is below the minimum of " + QString::number(min) );
+                        msgBox.exec();
+                        textBox->clear();
+                        response.append("_");
+                        return;
+                    }
+
+                    response.append(valStr);
+                    return;
                 }
             }
             response.append("_");
@@ -274,9 +288,9 @@ void MainWindow::on_setButton_clicked()
             */
         response = "[";
         fillArrayAtNextIndex("Kc", ui->kcTextBox);     response.append(",");
-        fillArrayAtNextIndex("TauI", ui->tauiTextBox); response.append(",");
-        fillArrayAtNextIndex("tauD", ui->taudTextBox); response.append(",");
-        fillArrayAtNextIndex("TauF", ui->taufTextBox); response.append(",");
+        fillArrayAtNextIndex("TauI", ui->tauiTextBox, 0); response.append(",");
+        fillArrayAtNextIndex("tauD", ui->taudTextBox, 0); response.append(",");
+        fillArrayAtNextIndex("TauF", ui->taufTextBox, 0); response.append(",");
 
         // these two have a different order in main but its okay
         response.append( ui->posFormCheckBox->isChecked()   ? "1," : "0," );
