@@ -33,14 +33,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     // timer is used to repeatedly check for port data until we are connected
-    this->timerId = startTimer(250); 
+    this->timerId = startTimer(250);
     // initialize the input vector to hold the input values from the port
     this->inputs = std::vector<float>(this->numInputs);
     // have the table resize with the window
-    ui->outputTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);   
+    ui->outputTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     /*
-    *  Connect functions from the PORT class to functions declared in the MainWIndow class and vice versa. 
+    *  Connect functions from the PORT class to functions declared in the MainWIndow class and vice versa.
     */
     connect(&port, &PORT::request, this, &MainWindow::showRequest);     // when the port recieves data it will emit PORT::request thus calling MainWindow::showRequest
     connect(&port, &PORT::disconnected, this, &MainWindow::disonnectedPopUpWindow);
@@ -48,8 +48,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     /*
-    *  Prepare data logging files. One in excel format named this->excelFileName 
-    *  and two in csv file format named this->csvFileName, another csv file 
+    *  Prepare data logging files. One in excel format named this->excelFileName
+    *  and two in csv file format named this->csvFileName, another csv file
     *  with titled with the current date will copy the contents of this->csvFileName.
     */
     // Move to the directy above the executable
@@ -104,7 +104,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->plot->addGraph();
     ui->plot->graph(3)->setName("Percent Heater on");
-    ui->plot->graph(3)->setPen(QPen(QColor("purple"))); 
+    ui->plot->graph(3)->setPen(QPen(QColor("purple")));
     ui->plot->graph(3)->setValueAxis(ui->plot->yAxis2);
 
     ui->plot->xAxis2->setVisible(true);  // show x ticks at top
@@ -128,23 +128,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
 /**
 *   Called when the window is closed.
-*   Creates and saves a backup file of logged data. 
+*   Creates and saves a backup file of logged data.
 */
 MainWindow::~MainWindow()
 {
     if (this->port.L_isConnected()) {
-        
+
         // Ensure we have a specified directory named backup. Create it if not
         QDir backupDir("backupFiles");
         if( !backupDir.exists() )
              backupDir.mkpath(".");
         QDir::setCurrent("backupFiles");
 
-        // Create a backup file titles with the current date and time 
+        // Create a backup file titles with the current date and time
         QDateTime currentTime(QDateTime::currentDateTime());
         QString dateStr = currentTime.toString("d-MMM--h-m-A");
-        dateStr.append(".csv"); // the 's' cant be used when formatting the time string, so append it 
-        this->csvdoc.copy(dateStr); 
+        dateStr.append(".csv"); // the 's' cant be used when formatting the time string, so append it
+        this->csvdoc.copy(dateStr);
     }
     this->csvdoc.close();
 
@@ -154,7 +154,7 @@ MainWindow::~MainWindow()
 
 
 /**
-*   Called when data was read from the port. 
+*   Called when data was read from the port.
 *   Fills a new row in the output table. Updates the graph, and any parameters shown in the GUI.
 */
 void MainWindow::showRequest(const QString &req)
@@ -175,7 +175,7 @@ void MainWindow::showRequest(const QString &req)
         ui->outputTable->setItem(ui->outputTable->rowCount()-1, 5, new QTableWidgetItem(QString::number(inputs[i_fanSpeed],'g',3)));
         ui->outputTable->scrollToBottom();   // scroll to the bottom to ensure the last value is visible
 
-        // add each value into the excel file 
+        // add each value into the excel file
         this->xldoc.write(ui->outputTable->rowCount(), 1, inputs[i_time]);
         this->xldoc.write(ui->outputTable->rowCount(), 2, inputs[i_percentOn]);
         this->xldoc.write(ui->outputTable->rowCount(), 3, inputs[i_temperature]);
@@ -184,7 +184,7 @@ void MainWindow::showRequest(const QString &req)
         this->xldoc.saveAs(this->excelFileName); // save the doc in case we crash
 
         /*
-        *  Update the csv file with the last data read from the port 
+        *  Update the csv file with the last data read from the port
         */
         char csvOuput[200]   = "";
         snprintf(csvOuput, sizeof(csvOuput),"%6.2f,%6.2f,%6.2f,%6.2f,%6.2f\n",
@@ -194,14 +194,14 @@ void MainWindow::showRequest(const QString &req)
         stream.flush();
 
 
-        /* 
-        *  Show the current values from the port in the current parameters area 
+        /*
+        *  Show the current values from the port in the current parameters area
         */
         ui->kcLabel->setNum(inputs[i_kc]);
         ui->tauiLabel->setNum(inputs[i_tauI]);
         ui->taudLabel->setNum(inputs[i_tauD]);
         ui->taufLabel->setNum(inputs[i_tauF]);
-        
+
         float errAndInVarTime = 12.0; // time after which we want to show average error and input variance
         float scoreTime = 29.0; // time after which we show the score
         if (inputs[i_time] > errAndInVarTime){ // only show inputVariance and error agter errAndInVarTime
@@ -210,12 +210,12 @@ void MainWindow::showRequest(const QString &req)
         }
         if (inputs[i_time] > scoreTime)  // only show score after scoreTime
             ui->scoreLabel->setNum(inputs[i_score]);
-        
+
         QString ModeString = " ";  // holds a string for current mode ex. "Velocity form, Filtering all terms"
         if ( inputs[i_positionForm]  ) ModeString.append("Position Form ");
         else ModeString.append("Velocity Form");
         if ( inputs[i_filterAll] ) ModeString.append("\nFiltering all terms");
-        ui->modeTextLabel->setText(ModeString); 
+        ui->modeTextLabel->setText(ModeString);
 
         /*
           After 29 minutes we show the score
@@ -225,7 +225,7 @@ void MainWindow::showRequest(const QString &req)
           1.5  >= score > 0.8  Control Student.
           0.8  >= score        Control Master.
         */
-        // check the score to determine what the 'rankString' should be 
+        // check the score to determine what the 'rankString' should be
         // todo: simplify this #p3
         if (inputs[i_time] > 29.0) {
             char rankString[200];
@@ -244,7 +244,7 @@ void MainWindow::showRequest(const QString &req)
 
 
         /*
-        *  Place the latest values in the graph  
+        *  Place the latest values in the graph
         */
         ui->plot->graph(3)->addData(inputs[i_time], inputs[i_percentOn]);
         ui->plot->graph(1)->addData(inputs[i_time], inputs[i_temperature]);
@@ -268,13 +268,13 @@ void MainWindow::on_setButton_clicked()
 {
     if ( port.L_isConnected() ){
 
-        QString response;  // is sent to the port 
+        QString response;  // is sent to the port
 
-        
+
         /*
         *  Lambda expression used to automate filling the output array from input in the textboxes
         *  Ensures the value inputted in the textBox is within range min and max
-        *  returns '_' if the value is no good. When the arduino recieves '_' it wont change the value. 
+        *  returns '_' if the value is no good. When the arduino recieves '_' it wont change the value.
         */
         auto fillArrayAtNextIndex = [&response] ( QString name, QLineEdit* textBox, double min = NAN, double max = NAN)
         {
@@ -323,13 +323,13 @@ void MainWindow::on_setButton_clicked()
         *  otherwise it will send an underscore signifying not to change the val
         */
         response = "[";
-        fillArrayAtNextIndex("Kc", ui->kcTextBox);     
+        fillArrayAtNextIndex("Kc", ui->kcTextBox);
         response.append(",");
-        fillArrayAtNextIndex("TauI", ui->tauiTextBox, 0); 
+        fillArrayAtNextIndex("TauI", ui->tauiTextBox, 0);
         response.append(",");
-        fillArrayAtNextIndex("tauD", ui->taudTextBox, 0); 
+        fillArrayAtNextIndex("tauD", ui->taudTextBox, 0);
         response.append(",");
-        fillArrayAtNextIndex("TauF", ui->taufTextBox, 0); 
+        fillArrayAtNextIndex("TauF", ui->taufTextBox, 0);
         response.append(",");
 
         // these two have a different order in the main program but its okay
@@ -338,11 +338,11 @@ void MainWindow::on_setButton_clicked()
         response.append( ui->filterAllCheckBox->isChecked() ? "1]" : "0]" );
 
         emit this->response(response);
-    } else {  
+    } else {
         /*
         *  if we arent connect then emit a signal as if the user clicked the first option in the combobox
-        *  and therefore a connection will be attempted. 
-        */ 
+        *  and therefore a connection will be attempted.
+        */
         emit this->on_portComboBox_activated(0);
     }
 
@@ -353,7 +353,7 @@ void MainWindow::on_setButton_clicked()
 /**
 *   Called by the timer ever 250 ms, until the timer is killed.
 *   Checks if a connection is active, if no connection is active,
-*   search for available ports and open a connection. 
+*   search for available ports and open a connection.
 */
 void MainWindow::timerEvent(QTimerEvent *event)
 {
@@ -378,7 +378,7 @@ void MainWindow::timerEvent(QTimerEvent *event)
 
 /**
 *   called when the user pressed on the combobox
-*   connects to the port selected. 
+*   connects to the port selected.
 */
 void MainWindow::on_portComboBox_activated(int index)
 {
@@ -393,8 +393,8 @@ void MainWindow::on_portComboBox_activated(int index)
 
 
 /**
-*   Called after new data is recieved from the port to parse the string recieved. 
-*   fills 'output' of five 'output_size' with the vlues in 'input' string. 
+*   Called after new data is recieved from the port to parse the string recieved.
+*   fills 'output' of five 'output_size' with the vlues in 'input' string.
 */
 bool MainWindow::deserializeArray(const char* const input, unsigned int output_size,  std::vector<float> &output)
 {
@@ -424,8 +424,8 @@ bool MainWindow::deserializeArray(const char* const input, unsigned int output_s
 
 
     /*
-    *   Correct number of parameters were found, 
-    *   'output' will not be filled with the values  
+    *   Correct number of parameters were found,
+    *   'output' will not be filled with the values
     */
     char* pEnd;
     p = input + 1;
@@ -455,8 +455,8 @@ bool MainWindow::deserializeArray(const char* const input, unsigned int output_s
 
 
 /**
-*   Called when the user clicked the position form checkbox 
-*   emits set_button_clicked so the new parameters will be sent to the port 
+*   Called when the user clicked the position form checkbox
+*   emits set_button_clicked so the new parameters will be sent to the port
 */
 void MainWindow::on_posFormCheckBox_stateChanged(int arg1)
 {
@@ -466,8 +466,8 @@ void MainWindow::on_posFormCheckBox_stateChanged(int arg1)
 
 
 /**
-*   Called when the user clicked the filterAll checkbox 
-*   emits set_button_clicked so the new parameters will be sent to the port 
+*   Called when the user clicked the filterAll checkbox
+*   emits set_button_clicked so the new parameters will be sent to the port
 */
 void MainWindow::on_filterAllCheckBox_stateChanged(int arg1)
 {
@@ -477,8 +477,8 @@ void MainWindow::on_filterAllCheckBox_stateChanged(int arg1)
 
 
 /**
-*   Called when the port is disconnected 
-*   Tells the user to manually restart the application 
+*   Called when the port is disconnected
+*   Tells the user to manually restart the application
 */
 bool MainWindow::disonnectedPopUpWindow()
 {

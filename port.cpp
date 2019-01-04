@@ -42,7 +42,7 @@ PORT::~PORT()
     qDebug() << " Calling destructor of PORT \n";
     mutex.lock();
     this->response = "   !!!!";
-    msleep(1000);   //todo: develop solution to ensure the port recieves '!'
+    msleep(1000);   //todo: develop solution to ensure the port recieves '!' #p2
     quit = true;
     mutex.unlock();
     wait();
@@ -51,7 +51,7 @@ PORT::~PORT()
 
 void PORT::openPort(const QSerialPortInfo& portInfo_)
 {
-    QMutexLocker locker(&this->mutex); // todo: see if this is necessary
+    QMutexLocker locker(&this->mutex); // todo: see if this is necessary #p3
     this->portInfo = portInfo_;
     qDebug() << " calling openPort of PORT \n";
     qDebug() << "Name: " << this->portInfo.portName() <<"\n";
@@ -133,7 +133,7 @@ void PORT::run()
             /* Done sending data to the port
                Now we can read any data from the port*/
 
-            if (serial.waitForReadyRead(waitTimeout)) // todo: determine if this is necessary
+            if (serial.waitForReadyRead(waitTimeout)) // todo: determine if this is necessary #p3
             {   // if it is necessary add a comment why
                 if( serial.canReadLine())
                 {

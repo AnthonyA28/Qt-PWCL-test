@@ -57,9 +57,9 @@ private slots:
     void on_filterAllCheckBox_stateChanged(int arg1);
 
 private:
-    
+
     Ui::MainWindow *ui;
-    
+
     int timerId;
     void timerEvent(QTimerEvent *event);
     PORT port;
@@ -69,9 +69,9 @@ private:
     QXlsx::Document xldoc;
     QFile csvdoc;
 
-    
+
     bool deserializeArray(const char* const input, unsigned int output_size, std::vector<float>& output);
-    std::vector<float> inputs;  // Holds values read from the port ordered below 
+    std::vector<float> inputs;  // Holds values read from the port ordered below
 
     /*
     * Assign the index in which these values will exist in the 'inputs' and 'outputs' arrays
