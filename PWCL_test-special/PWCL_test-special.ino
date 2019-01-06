@@ -126,9 +126,9 @@ const unsigned int i_score        = 15; //  for output
 const unsigned int numInputs      = 6;
 const unsigned int numOutputs     = 16;
 // initialize the input and output arrays
-const unsigned int buffersize = 300;
-char inputbuffer[buffersize];
-char outputbuffer[buffersize]; // its much better for the memory to be using a char* rather than a string
+const unsigned int bufferSize = 300;
+char inputbuffer[bufferSize];
+char outputbuffer[bufferSize]; // its much better for the memory to be using a char* rather than a string
 float inputs[numInputs]   ={Kc, tauI, tauD, tauF, float(positionFlag), float(filterAll)};
 float outputs[numOutputs] ={Kc, tauI, tauD, tauF, float(positionFlag), float(filterAll), float(autoEnabled), TsetPoint, percentRelayOn, fanSpeed, temperature , tempFiltered, 0, Ju, Jy, J };
 
@@ -507,30 +507,22 @@ void check_input()
   presenting the possibiliity of a buffer overflow. this will read up to a closing bracket
   or until the input buffer is at max capacity.
   */
-  if (Serial.available())
-  {
-    unsigned int i = 0;
-    char c = '\0';
-    while (c != ']'){   // change this to check for null and test it #p1
-      // read until the first right bracket
-      if (c == '!'){
+  if (Serial.available()) {
+    for (unsigned int i = 0; i < bufferSize - 1; i ++)
+    {
+      char c = Serial.read();
+      inputbuffer[i] = c; // place this character in the input buffer
+      if (c == ']' || c == '\0' ) { // stop reading chracters if we have read the last bracket or a null charcter
+        inputbuffer[i+1] = '\0'; // this will null terminate the inputbuffer
+        break;
+      }
+      if (c == '!')
         shutdown();
-      }
-      // if there is a '!'' this means we need to shutdown
-      c = Serial.read();
-      inputbuffer[i] = c;
-      i++;
-      if (i >= (buffersize - 1)){
-        /* overrunning the input buffer will most certainly fragment the arduino memory */
-        return;
-      }
       delay(10);
     }
-    while (Serial.available()){
-      // this throws aways any other character in the buffer after the first right bracket
-      char x = Serial.read();
-    }
-    inputbuffer[i] = '\0';
+    while (Serial.available())
+      char _ = Serial.read(); // this throws aways any other character in the buffer after the first right bracket
     deserialize_array(inputbuffer, numInputs, inputs);
   }
+
 }
