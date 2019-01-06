@@ -182,6 +182,7 @@ void MainWindow::showRequest(const QString &req)
             ui->tauiTextBox->setEnabled(true);
             ui->taudTextBox->setEnabled(true);
             ui->taufTextBox->setEnabled(true);
+            ui->emergencyMessageLabel->clear();
         }
 
         /*
@@ -278,6 +279,8 @@ void MainWindow::showRequest(const QString &req)
     }
     else{
         qDebug() << "ERROR Failed to deserialize array \n";
+        if (!this->validConnection)
+            ui->emergencyMessageLabel->setText("Possible incorrect arduino program uploaded.");
     }
 }
 
