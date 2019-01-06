@@ -34,10 +34,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     // timer is used to repeatedly check for port data until we are connected
     this->timerId = startTimer(250);
+    // indicates when we are connected to the port AND the correct arduino program is being run
+    this->validConnection = false;
     // initialize the input vector to hold the input values from the port
     this->inputs = std::vector<float>(this->numInputs);
     // have the table resize with the window
     ui->outputTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // disable any user input into the text boxes (until a connection is made)
+    ui->kcTextBox->setEnabled(false);
+    ui->tauiTextBox->setEnabled(false);
+    ui->taudTextBox->setEnabled(false);
+    ui->taufTextBox->setEnabled(false);
+
 
     /*
     *  Connect functions from the PORT class to functions declared in the MainWIndow class and vice versa.
@@ -159,7 +167,22 @@ MainWindow::~MainWindow()
 */
 void MainWindow::showRequest(const QString &req)
 {
+    if (req.contains('!')) {
+        ui->emergencyMessageLabel->setText(req);
+        return;
+    }
+
+
     if(this->deserializeArray(req.toStdString().c_str(), this->numInputs, this->inputs)){
+
+        if (!this->validConnection) {
+            this->validConnection = true;  // String was parsed therefore the correct arduino program is uploaded
+            // enable user input because we are connected to the correct arduino program now.
+            ui->kcTextBox->setEnabled(true);
+            ui->tauiTextBox->setEnabled(true);
+            ui->taudTextBox->setEnabled(true);
+            ui->taufTextBox->setEnabled(true);
+        }
 
         /*
         *  Update the output table with the last parameters read from the port.
@@ -368,8 +391,7 @@ void MainWindow::timerEvent(QTimerEvent *event)
         }
     } else {
         killTimer(this->timerId); // no reason for the timer anymore
-        if( ui->setButton->text() != "Set")   // change connect button to set button
-           ui->setButton->setText("Set");
+        ui->setButton->setText("Set");   // change connect button to set button
     }
 
 }

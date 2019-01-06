@@ -63,6 +63,7 @@ private:
     int timerId;
     void timerEvent(QTimerEvent *event);
     PORT port;
+    bool validConnection;
 
     QString csvFileName;
     QString excelFileName;
