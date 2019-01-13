@@ -770,7 +770,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,1">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,1,0">
       <item>
        <widget class="QTableWidget" name="outputTable">
         <property name="enabled">
@@ -1074,6 +1074,53 @@ Point [°C]</string>
       <item>
        <widget class="QCustomPlot" name="plot" native="true"/>
       </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_13">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(255, 255, 255);</string>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'arial unicode ms,Lucida Sans Unicode,sans-serif'; font-size:9pt; color:#ffaa00; background-color:#ffffff;&quot;&gt;• Set point&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_18">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(255, 255, 255);</string>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Code2000,Arial Unicode MS,Lucida Sans Unicode'; font-size:9pt; color:#55ff00; background-color:#fbfffe;&quot;&gt;⸺&lt;/span&gt;&lt;span style=&quot; font-family:'arial unicode ms,Lucida Sans Unicode,sans-serif'; font-size:9pt; color:#55ff00; background-color:#ffffff;&quot;&gt;Temp&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_17">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(255, 255, 255);</string>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Code2000,Arial Unicode MS,Lucida Sans Unicode'; font-size:9pt; color:#0055ff; background-color:#fbfffe;&quot;&gt;⸺&lt;/span&gt;&lt;span style=&quot; font-family:'arial unicode ms,Lucida Sans Unicode,sans-serif'; font-size:9pt; color:#0055ff; background-color:#ffffff;&quot;&gt;Temp Filt &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_11">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(255, 255, 255);</string>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Code2000,Arial Unicode MS,Lucida Sans Unicode'; font-size:9pt; color:#55007f; background-color:#fbfffe;&quot;&gt;⸺&lt;/span&gt;&lt;span style=&quot; font-family:'arial unicode ms,Lucida Sans Unicode,sans-serif'; font-size:9pt; color:#55007f; background-color:#ffffff;&quot;&gt;% On&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
      </layout>
     </item>
    </layout>
@@ -1084,7 +1131,7 @@ Point [°C]</string>
      <x>0</x>
      <y>0</y>
      <width>700</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
