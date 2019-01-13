@@ -95,6 +95,9 @@ private:
     const unsigned int i_score         = 15;      // for input
     const unsigned int numInputs       = 16;
 
+protected:
+    bool event(QEvent *event);
+
 };
 
 #endif // MAINWINDOW_H
