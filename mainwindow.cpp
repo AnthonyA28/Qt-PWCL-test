@@ -185,27 +185,44 @@ void MainWindow::showRequest(const QString &req)
             ui->emergencyMessageLabel->clear();
         }
 
+        double time       = static_cast<double>(inputs[i_time]);
+        double percentOn  = static_cast<double>(inputs[i_percentOn]);
+        double temp       = static_cast<double>(inputs[i_temperature]);
+        double tempFilt   = static_cast<double>(inputs[i_tempFiltered]);
+        double setPoint   = static_cast<double>(inputs[i_setPoint]);
+        double fanSpeed   = static_cast<double>(inputs[i_fanSpeed]);
+        double kc         = static_cast<double>(inputs[i_kc]);
+        double tauI       = static_cast<double>(inputs[i_tauI]);
+        double tauD       = static_cast<double>(inputs[i_tauD]);
+        double tauF       = static_cast<double>(inputs[i_tauF]);
+        double score      = static_cast<double>(inputs[i_score]);
+        double avg_err    = static_cast<double>(inputs[i_avg_err]);
+        double input_var  = static_cast<double>(inputs[i_input_var]);
+        bool positionForm = static_cast<bool>(inputs[i_positionForm]);
+        bool filterAll    = static_cast<bool>(inputs[i_filterAll]);
+
+
         /*
         *  Update the output table with the last parameters read from the port.
         */
         ui->outputTable->insertRow(ui->outputTable->rowCount()); // create a new row
 
         // add a string of each value into each column at the last row in the outputTable
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 0, new QTableWidgetItem(QString::number(inputs[i_time],'g',3)));
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 1, new QTableWidgetItem(QString::number(inputs[i_percentOn],'g',3)));
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 2, new QTableWidgetItem(QString::number(inputs[i_temperature],'g',3)));
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 3, new QTableWidgetItem(QString::number(inputs[i_tempFiltered],'g',3)));
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 4, new QTableWidgetItem(QString::number(inputs[i_setPoint],'g',3)));
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 5, new QTableWidgetItem(QString::number(inputs[i_fanSpeed],'g',3)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 0, new QTableWidgetItem(QString::number( time,'g',3)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 1, new QTableWidgetItem(QString::number( percentOn,'g',3)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 2, new QTableWidgetItem(QString::number( temp,'g',3)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 3, new QTableWidgetItem(QString::number( tempFilt,'g',3)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 4, new QTableWidgetItem(QString::number( setPoint,'g',3)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 5, new QTableWidgetItem(QString::number( fanSpeed,'g',3)));
         if (!ui->outputTable->underMouse())
             ui->outputTable->scrollToBottom();   // scroll to the bottom to ensure the last value is visible
 
         // add each value into the excel file
-        this->xldoc.write(ui->outputTable->rowCount(), 1, inputs[i_time]);
-        this->xldoc.write(ui->outputTable->rowCount(), 2, inputs[i_percentOn]);
-        this->xldoc.write(ui->outputTable->rowCount(), 3, inputs[i_temperature]);
-        this->xldoc.write(ui->outputTable->rowCount(), 4, inputs[i_tempFiltered]);
-        this->xldoc.write(ui->outputTable->rowCount(), 5, inputs[i_setPoint]);
+        this->xldoc.write(ui->outputTable->rowCount(), 1,  time);
+        this->xldoc.write(ui->outputTable->rowCount(), 2,  percentOn);
+        this->xldoc.write(ui->outputTable->rowCount(), 3,  temp);
+        this->xldoc.write(ui->outputTable->rowCount(), 4,  tempFilt);
+        this->xldoc.write(ui->outputTable->rowCount(), 5,  setPoint);
         this->xldoc.saveAs(this->excelFileName); // save the doc in case we crash
 
         /*
@@ -213,7 +230,7 @@ void MainWindow::showRequest(const QString &req)
         */
         char csvOuput[200]   = "";
         snprintf(csvOuput, sizeof(csvOuput),"%6.2f,%6.2f,%6.2f,%6.2f,%6.2f\n",
-            inputs[i_time], inputs[i_percentOn], inputs[i_temperature], inputs[i_tempFiltered], inputs[i_setPoint]);
+             time,  percentOn,  temp,  tempFilt,  setPoint);
         QTextStream stream(&this->csvdoc);
         stream << csvOuput;
         stream.flush();
@@ -222,24 +239,24 @@ void MainWindow::showRequest(const QString &req)
         /*
         *  Show the current values from the port in the current parameters area
         */
-        ui->kcLabel->setNum(inputs[i_kc]);
-        ui->tauiLabel->setNum(inputs[i_tauI]);
-        ui->taudLabel->setNum(inputs[i_tauD]);
-        ui->taufLabel->setNum(inputs[i_tauF]);
+        ui->kcLabel->setNum( kc);
+        ui->tauiLabel->setNum( tauI);
+        ui->taudLabel->setNum( tauD);
+        ui->taufLabel->setNum( tauF);
 
-        float errAndInVarTime = 12.0; // time after which we want to show average error and input variance
-        float scoreTime = 29.0; // time after which we show the score
-        if (inputs[i_time] > errAndInVarTime){ // only show inputVariance and error agter errAndInVarTime
-            ui->avgerrLabel->setNum(inputs[i_avg_err]);
-            ui->inputVarLabel->setNum(inputs[i_input_var]);
+        double errAndInVarTime = 12.0; // time after which we want to show average error and input variance
+        double scoreTime = 29.0; // time after which we show the score
+        if ( time > errAndInVarTime){ // only show inputVariance and error agter errAndInVarTime
+            ui->avgerrLabel->setNum( avg_err);
+            ui->inputVarLabel->setNum( input_var);
         }
-        if (inputs[i_time] > scoreTime)  // only show score after scoreTime
-            ui->scoreLabel->setNum(inputs[i_score]);
+        if ( time > scoreTime)  // only show score after scoreTime
+            ui->scoreLabel->setNum( score);
 
         QString ModeString = " ";  // holds a string for current mode ex. "Velocity form, Filtering all terms"
-        if ( inputs[i_positionForm]  ) ModeString.append("Position Form ");
+        if (  positionForm  ) ModeString.append("Position Form ");
         else ModeString.append("Velocity Form");
-        if ( inputs[i_filterAll] ) ModeString.append("\nFiltering all terms");
+        if (  filterAll ) ModeString.append("\nFiltering all terms");
         ui->modeTextLabel->setText(ModeString);
 
         /*
@@ -252,13 +269,13 @@ void MainWindow::showRequest(const QString &req)
         */
         // check the score to determine what the 'rankString' should be
         // todo: simplify this #p3
-        if (inputs[i_time] > 29.0) {
+        if ( time > 29.0) {
             char rankString[200];
             snprintf(rankString, sizeof(rankString), "Professional Crash test dummy\n");
-            if (inputs[i_score] <= 10.0) {
-                if (inputs[i_score] <= 3.0) {
-                    if (inputs[i_score] <= 1.5) {
-                        if (inputs[i_score] <= 0.8) {
+            if ( score <= 10.0) {
+                if ( score <= 3.0) {
+                    if ( score <= 1.5) {
+                        if ( score <= 0.8) {
                                   snprintf(rankString, sizeof(rankString), "Control Master\n");
                         } else {  snprintf(rankString, sizeof(rankString), "Control Student\n") ; }
                     } else {      snprintf(rankString, sizeof(rankString), "Proud owner of a learners permit\n") ; }
@@ -271,10 +288,10 @@ void MainWindow::showRequest(const QString &req)
         /*
         *  Place the latest values in the graph
         */
-        ui->plot->graph(3)->addData(inputs[i_time], inputs[i_percentOn]);
-        ui->plot->graph(1)->addData(inputs[i_time], inputs[i_temperature]);
-        ui->plot->graph(2)->addData(inputs[i_time], inputs[i_tempFiltered]);
-        ui->plot->graph(0)->addData(inputs[i_time], inputs[i_setPoint]);
+        ui->plot->graph(3)->addData( time,  percentOn);
+        ui->plot->graph(1)->addData( time,  temp);
+        ui->plot->graph(2)->addData( time,  tempFilt);
+        ui->plot->graph(0)->addData( time,  setPoint);
         ui->plot->replot( QCustomPlot::rpQueuedReplot );
         ui->plot->rescaleAxes(); // ensure graph fits all data
     }
@@ -303,7 +320,7 @@ void MainWindow::on_setButton_clicked()
         *  Ensures the value inputted in the textBox is within range min and max
         *  returns '_' if the value is no good. When the arduino recieves '_' it wont change the value.
         */
-        auto fillArrayAtNextIndex = [&response] ( QString name, QLineEdit* textBox, double min = NAN, double max = NAN)
+        auto fillArrayAtNextIndex = [&response] ( QString name, QLineEdit* textBox, float min = NAN, float max = NAN)
         {
             QString valStr = textBox->text();   // 'valStr' is a string holding what the user inputted in the texbox
             bool isNumerical = false;
@@ -321,7 +338,7 @@ void MainWindow::on_setButton_clicked()
                     // ensure the value is within range
                     if (max != NAN && val > max) {  // max is NAN if it is unconstrained
                         QMessageBox msgBox;
-                        msgBox.setText(name + " of " + QString::number(val) + " is over the maximum of " + QString::number(max) );
+                        msgBox.setText(name + " of " + QString::number(static_cast<double>(val)) + " is over the maximum of " + QString::number(static_cast<double>(max)) );
                         msgBox.exec();
                         textBox->clear();
                         response.append("_");
@@ -329,7 +346,7 @@ void MainWindow::on_setButton_clicked()
                     }
                 if  (min != NAN && val < min){ // min is NAN if it is unconstrained
                         QMessageBox msgBox;
-                        msgBox.setText(name + " of " + QString::number(val) + " is below the minimum of " + QString::number(min) );
+                        msgBox.setText(name + " of " + QString::number(static_cast<double>(val)) + " is below the minimum of " + QString::number(static_cast<double>(min)) );
                         msgBox.exec();
                         textBox->clear();
                         response.append("_");
