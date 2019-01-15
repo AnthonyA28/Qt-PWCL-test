@@ -169,6 +169,10 @@ void MainWindow::showRequest(const QString &req)
 {
     if (req.contains('!')) {
         ui->emergencyMessageLabel->setText(req);
+            ui->scoreLabel->setNum(static_cast<double>(inputs[i_score])); //show the score
+        if(req.contains("overheat")) {
+            ui->scoreRankLabel->setText("Professional Crash Test Dummy!" );
+        }
         return;
     }
 
