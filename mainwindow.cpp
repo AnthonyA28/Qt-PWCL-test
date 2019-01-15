@@ -265,8 +265,7 @@ void MainWindow::showRequest(const QString &req)
 
         /*
           After 29 minutes we show the score
-          score > 10.0         professional crash test dummy.
-          10.0 >= score > 3.0  Accident waiting to happen.
+          score > 3.0  Accident waiting to happen.
           3.0  >= score > 1.5  Proud owner of a learners permit.
           1.5  >= score > 0.8  Control Student.
           0.8  >= score        Control Master.
@@ -275,15 +274,13 @@ void MainWindow::showRequest(const QString &req)
         // todo: simplify this #p3
         if ( time > 29.0) {
             char rankString[200];
-            snprintf(rankString, sizeof(rankString), "Professional Crash test dummy\n");
-            if ( score <= 10.0) {
-                if ( score <= 3.0) {
-                    if ( score <= 1.5) {
-                        if ( score <= 0.8) {
-                                  snprintf(rankString, sizeof(rankString), "Control Master\n");
-                        } else {  snprintf(rankString, sizeof(rankString), "Control Student\n") ; }
-                    } else {      snprintf(rankString, sizeof(rankString), "Proud owner of a learners permit\n") ; }
-                } else {          snprintf(rankString, sizeof(rankString), "Accident waiting to happen\n") ; }
+            snprintf(rankString, sizeof(rankString), "Accident waiting to happen\n") ;
+            if ( score <= 3.0) {
+                if ( score <= 1.5) {
+                    if ( score <= 0.8) {
+                              snprintf(rankString, sizeof(rankString), "Control Master\n");
+                    } else {  snprintf(rankString, sizeof(rankString), "Control Student\n") ; }
+                } else {      snprintf(rankString, sizeof(rankString), "Proud owner of a learners permit\n") ; }
             }
             ui->scoreRankLabel->setText(rankString);
         }
