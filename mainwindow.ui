@@ -26,7 +26,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
     <property name="spacing">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="leftMargin">
      <number>0</number>
@@ -1054,7 +1054,7 @@ Point [°C]</string>
      <x>0</x>
      <y>0</y>
      <width>620</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
