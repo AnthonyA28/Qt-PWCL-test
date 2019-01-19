@@ -179,7 +179,7 @@ void MainWindow::showRequest(const QString &req)
             player->setVolume(100);
             player->play();
             ui->scoreLabel->setText(QString::number(static_cast<double>(inputs[i_score]), 'f', 2)); //show the score precision = 2
-            ui->scoreRankLabel->setText("You have earned the rating of Professional Crash Test Dummy." );
+            ui->scoreRankLabel->setText("You have earned the rating of\nProfessional Crash Test Dummy" );
         }
         return;
     }
@@ -286,9 +286,9 @@ void MainWindow::showRequest(const QString &req)
             if ( score <= 3.0) {
                 if ( score <= 1.5) {
                     if ( score <= 0.8) {
-                              snprintf(rankString, sizeof(rankString), "You have achieved the rating of Control Master.\n");
-                    } else {  snprintf(rankString, sizeof(rankString), "You have achieved the rating of Control Student.\n") ; }
-                } else {      snprintf(rankString, sizeof(rankString), "You have achieved the rating of Proud owner of a learners permit.\n") ; }
+                              snprintf(rankString, sizeof(rankString), "You have achieved the rating of\nControl Master");
+                    } else {  snprintf(rankString, sizeof(rankString), "You have achieved the rating of\nControl Student") ; }
+                } else {      snprintf(rankString, sizeof(rankString), "You have achieved the rating of\nProud owner of a learners permit") ; }
             }
             ui->scoreRankLabel->setText(rankString);
         }
