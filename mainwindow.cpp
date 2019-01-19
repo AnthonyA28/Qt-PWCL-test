@@ -104,7 +104,7 @@ MainWindow::MainWindow(QWidget *parent) :
     */
     ui->plot->addGraph();
     ui->plot->graph(0)->setName("Set Point");
-    ui->plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, QColor("orange"), 5));
+    ui->plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, QColor("orange"), 8));
     ui->plot->graph(0)->setPen(QPen(Qt::white)); // so we dont see the line connecting the dots
     ui->plot->graph(0)->setValueAxis(ui->plot->yAxis2);
 
@@ -219,12 +219,12 @@ void MainWindow::showRequest(const QString &req)
         ui->outputTable->insertRow(ui->outputTable->rowCount()); // create a new row
 
         // add a string of each value into each column at the last row in the outputTable
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 0, new QTableWidgetItem(QString::number( time,'g',3)));
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 1, new QTableWidgetItem(QString::number( percentOn,'g',3)));
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 2, new QTableWidgetItem(QString::number( temp,'g',3)));
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 3, new QTableWidgetItem(QString::number( tempFilt,'g',3)));
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 4, new QTableWidgetItem(QString::number( setPoint,'g',3)));
-        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 5, new QTableWidgetItem(QString::number( fanSpeed,'g',3)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 0, new QTableWidgetItem(QString::number( time,'f',2)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 1, new QTableWidgetItem(QString::number( percentOn,'f',2)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 2, new QTableWidgetItem(QString::number( temp,'f',2)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 3, new QTableWidgetItem(QString::number( tempFilt,'f',2)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 4, new QTableWidgetItem(QString::number( setPoint,'f',2)));
+        ui->outputTable->setItem(ui->outputTable->rowCount()-1, 5, new QTableWidgetItem(QString::number( fanSpeed,'f',2)));
         if (!ui->outputTable->underMouse())
             ui->outputTable->scrollToBottom();   // scroll to the bottom to ensure the last value is visible
 
@@ -258,11 +258,11 @@ void MainWindow::showRequest(const QString &req)
         double errAndInVarTime = 12.0; // time after which we want to show average error and input variance
         double scoreTime = 29.0; // time after which we show the score
         if ( time > errAndInVarTime){ // only show inputVariance and error agter errAndInVarTime
-            ui->avgerrLabel->setNum( avg_err);
-            ui->inputVarLabel->setNum( input_var);
+            ui->avgerrLabel->setText( QString::number(avg_err, 'f', 2));
+            ui->inputVarLabel->setText( QString::number(input_var, 'f', 2));
         }
         if ( time > scoreTime)  // only show score after scoreTime
-            ui->scoreLabel->setNum( score);
+            ui->scoreLabel->setText(QString::number(inputs[i_score], 'f', 2)); //show the score precision = 2
 
         QString ModeString = " ";  // holds a string for current mode ex. "Velocity form, Filtering all terms"
         if (  positionForm  ) ModeString.append("Position Form ");
