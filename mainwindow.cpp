@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // create the media player
     this->player = new QMediaPlayer;
-    player->setMedia(QUrl::fromLocalFile(execDir+"/alarm.wav"));
+    player->setMedia(QUrl::fromLocalFile(execDir+"/audio/alarm.wav"));
 
 
     this->excelFileName = "excelFile.xlsx";
