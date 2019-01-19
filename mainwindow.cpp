@@ -67,6 +67,11 @@ MainWindow::MainWindow(QWidget *parent) :
     newDir.cdUp();
     QDir::setCurrent(newDir.path());
 
+    // create the media player
+    this->player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile(execDir+"/alarm.wav"));
+
+
     this->excelFileName = "excelFile.xlsx";
     this->csvFileName   = "data.csv";
 
@@ -171,7 +176,9 @@ void MainWindow::showRequest(const QString &req)
         ui->emergencyMessageLabel->setText(req);
             ui->scoreLabel->setNum(static_cast<double>(inputs[i_score])); //show the score
         if(req.contains("overheat")) {
-            ui->scoreRankLabel->setText("Professional Crash Test Dummy!" );
+            player->setVolume(100);
+            player->play();
+            ui->scoreRankLabel->setText("You have earned the rating of Professional Crash Test Dummy!" );
         }
         return;
     }
@@ -273,14 +280,14 @@ void MainWindow::showRequest(const QString &req)
         // check the score to determine what the 'rankString' should be
         // todo: simplify this #p3
         if ( time > 29.0) {
-            char rankString[200];
+            char rankString[300];
             snprintf(rankString, sizeof(rankString), "Accident waiting to happen\n") ;
             if ( score <= 3.0) {
                 if ( score <= 1.5) {
                     if ( score <= 0.8) {
-                              snprintf(rankString, sizeof(rankString), "Control Master\n");
-                    } else {  snprintf(rankString, sizeof(rankString), "Control Student\n") ; }
-                } else {      snprintf(rankString, sizeof(rankString), "Proud owner of a learners permit\n") ; }
+                              snprintf(rankString, sizeof(rankString), "You have earned the rating of Control Master\n");
+                    } else {  snprintf(rankString, sizeof(rankString), "You have earned the rating of Control Student\n") ; }
+                } else {      snprintf(rankString, sizeof(rankString), "You have earned the rating of Proud owner of a learners permit\n") ; }
             }
             ui->scoreRankLabel->setText(rankString);
         }

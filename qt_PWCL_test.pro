@@ -21,7 +21,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport
+QT       += core gui serialport multimedia
 win32:RC_ICONS += gator_icon.ico
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport

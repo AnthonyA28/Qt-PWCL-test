@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMediaPlayer>
 
 #include "xlsxdocument.h"
 #include "xlsxchartsheet.h"
@@ -69,7 +70,7 @@ private:
     QString excelFileName;
     QXlsx::Document xldoc;
     QFile csvdoc;
-
+    QMediaPlayer* player;
 
     bool deserializeArray(const char* const input, unsigned int output_size, std::vector<float>& output);
     std::vector<float> inputs;  // Holds values read from the port ordered below
