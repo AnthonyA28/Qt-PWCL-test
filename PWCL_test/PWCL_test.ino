@@ -90,7 +90,7 @@ float changeTime[] = {0., 12., 21., 30., 30., 30.}; //min, used for test
 float Tsp[] = {25., 36., 40., 40., 40., 40.}; //deg C, used for test, set points UNTIL each changeTime, 2nd value is 1st implemented
 byte fanSetting[] = {255, 255, 255, 0, 255, 255}; // controls fan speed, used for test, values UNTIL each changeTime
 
-float Tmax = 70;   //used for test
+float Tmax = 60;   //used for test
 float Jysum = 0;      //Needed for the y-performance measure, sum of squared errors
 unsigned long nJy = 0;  //Needed for the y-performance measure, number of measurements
 float Jy; //Becomes the average squared error
