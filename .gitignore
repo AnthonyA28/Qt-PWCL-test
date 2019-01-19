@@ -4,6 +4,10 @@ builds/
 *.user
 *.xlsx
 *.csv
+*.m4a
+*.mp3
+*wav
+*.opus
 qt_PWCL_test.pro.user.20
 port.cpp.bak
 *.bak
