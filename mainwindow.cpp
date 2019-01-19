@@ -178,7 +178,7 @@ void MainWindow::showRequest(const QString &req)
         if(req.contains("overheat")) {
             player->setVolume(100);
             player->play();
-            ui->scoreRankLabel->setText("You have earned the rating of Professional Crash Test Dummy!" );
+            ui->scoreRankLabel->setText("You have earned the rating of Professional Crash Test Dummy." );
         }
         return;
     }
@@ -285,9 +285,9 @@ void MainWindow::showRequest(const QString &req)
             if ( score <= 3.0) {
                 if ( score <= 1.5) {
                     if ( score <= 0.8) {
-                              snprintf(rankString, sizeof(rankString), "You have earned the rating of Control Master\n");
-                    } else {  snprintf(rankString, sizeof(rankString), "You have earned the rating of Control Student\n") ; }
-                } else {      snprintf(rankString, sizeof(rankString), "You have earned the rating of Proud owner of a learners permit\n") ; }
+                              snprintf(rankString, sizeof(rankString), "You have earned the rating of Control Master.\n");
+                    } else {  snprintf(rankString, sizeof(rankString), "You have earned the rating of Control Student.\n") ; }
+                } else {      snprintf(rankString, sizeof(rankString), "You have earned the rating of Proud owner of a learners permit.\n") ; }
             }
             ui->scoreRankLabel->setText(rankString);
         }
