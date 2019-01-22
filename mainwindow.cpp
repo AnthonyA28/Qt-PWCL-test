@@ -231,7 +231,7 @@ void MainWindow::showRequest(const QString &req)
             ui->outputTable->scrollToBottom();   // scroll to the bottom to ensure the last value is visible
 
         // add each value into the excel file ( the silly math here is to format the float to have only 2 decimals )
-        this->xldoc.write(ui->outputTable->rowCount(), 1,  (static_cast<int>(temp*100))/100.0);
+        this->xldoc.write(ui->outputTable->rowCount(), 1,  (static_cast<int>(time*100))/100.0);
         this->xldoc.write(ui->outputTable->rowCount(), 2,  (static_cast<int>(percentOn*100))/100.0);
         this->xldoc.write(ui->outputTable->rowCount(), 3,  (static_cast<int>(temp*100))/100.0);
         this->xldoc.write(ui->outputTable->rowCount(), 4,  (static_cast<int>(tempFilt*100))/100.0);
