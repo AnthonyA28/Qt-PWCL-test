@@ -224,7 +224,7 @@ void loop(void) {  //MAIN CODE iterates indefinitely
        Serial.println(F("CRC is not valid!"));
   }
   if ( addr[0] != 0x10 && addr[0] != 0x28) {
-      Serial.print(F("Temperature probe malfunctioning!"));
+      Serial.println(F("Temperature probe malfunctioning!"));
   }
   ds.reset();
   ds.select(addr);
