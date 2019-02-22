@@ -72,13 +72,11 @@ MainWindow::MainWindow(QWidget *parent) :
     player->setMedia(QUrl::fromLocalFile(execDir+"/audio/alarm.wav"));
 
 
-    this->excelFileName = "excelFile.xlsx";
-    this->csvFileName   = "data.csv";
-
-    if( QFile::exists(this->excelFileName) ){
-        QFile oldFile(this->excelFileName);
-        oldFile.remove();
-    }
+    // Create file titles with the current date and time
+    QDateTime currentTime(QDateTime::currentDateTime());
+    QString dateStr = currentTime.toString("d-MMM--h-m-A");
+    this->excelFileName = "Data-Test.xlsx";
+    this->csvFileName   = dateStr + "-Test.csv";
 
     // give the excel file column headers
     this->xldoc.write( 1 , 1, "Time");
@@ -87,15 +85,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->xldoc.write( 1 , 4, "Filtered Temperature");
     this->xldoc.write( 1 , 5, "Set Point");
 
-    // open the csv file and give it a header
-    this->csvdoc.setFileName(this->csvFileName);
-    if (this->csvdoc.open(QIODevice::Truncate | QIODevice::WriteOnly | QIODevice::Text)){
-        QTextStream stream(&this->csvdoc);
-        stream << "Time, percent on, Temp, Temp filtered, Set Point\n";
-    }
-    else{
-        qDebug() << " Failed to open data.csv \n";
-    }
 
 
     /*
@@ -153,11 +142,7 @@ MainWindow::~MainWindow()
              backupDir.mkpath(".");
         QDir::setCurrent("backupFiles");
 
-        // Create a backup file titles with the current date and time
-        QDateTime currentTime(QDateTime::currentDateTime());
-        QString dateStr = currentTime.toString("d-MMM--h-m-A");
-        dateStr.append(".csv"); // the 's' cant be used when formatting the time string, so append it
-        this->csvdoc.copy(dateStr);
+        this->csvdoc.copy(this->csvFileName);
     }
     this->csvdoc.close();
 
@@ -181,6 +166,7 @@ void MainWindow::showRequest(const QString &req)
             player->play();
             ui->scoreLabel->setText(QString::number(static_cast<double>(inputs[i_score]), 'f', 2)); //show the score precision = 2
             ui->scoreRankLabel->setText("You have earned the rating of\nProfessional Crash Test Dummy" );
+
         }
         return;
     }
@@ -196,6 +182,21 @@ void MainWindow::showRequest(const QString &req)
             ui->taudTextBox->setEnabled(true);
             ui->taufTextBox->setEnabled(true);
             ui->emergencyMessageLabel->clear();
+
+            // open the csv file and give it a header
+            this->csvdoc.setFileName(this->csvFileName);
+            if (this->csvdoc.open(QIODevice::Truncate | QIODevice::WriteOnly | QIODevice::Text)){
+                QTextStream stream(&this->csvdoc);
+                stream << "Time, Percent on, Temperature, Filtered Temperature, Set Point\n";
+            }
+            else{
+                qDebug() << " Failed to open  csv file  \n";
+                QString errMsg = this->csvdoc.errorString();
+                QFileDevice::FileError err = this->csvdoc.error();
+                qDebug() << " \n ERROR msg : " << errMsg ;
+                qDebug() << " \n ERROR : " << err;
+            }
+
         }
 
         double time       = static_cast<double>(inputs[i_time]);
@@ -542,10 +543,7 @@ bool MainWindow::disonnectedPopUpWindow()
     QDir::setCurrent("backupFiles");
 
     // Create a backup file titles with the current date and time
-    QDateTime currentTime(QDateTime::currentDateTime());
-    QString dateStr = currentTime.toString("d-MMM--h-m-A");
-    dateStr.append(".csv"); // the 's' cant be used when formatting the time string
-    this->csvdoc.copy(dateStr);
+    this->csvdoc.copy(this->csvFileName);
 
     QMessageBox::critical(this,
                           "Error",

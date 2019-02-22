@@ -846,8 +846,9 @@ On [%] </string>
         </column>
         <column>
          <property name="text">
-          <string>Temperature 
-Filtered [°C]</string>
+          <string>Filtered 
+Temperature 
+ [°C]</string>
          </property>
          <property name="font">
           <font>
@@ -1054,7 +1055,7 @@ Point [°C]</string>
      <x>0</x>
      <y>0</y>
      <width>620</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
