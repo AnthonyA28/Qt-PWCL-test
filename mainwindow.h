@@ -57,6 +57,8 @@ private slots:
     void on_posFormCheckBox_stateChanged(int arg1);
     void on_filterAllCheckBox_stateChanged(int arg1);
 
+    void on_actionExport_Excel_File_triggered();
+
 private:
 
     Ui::MainWindow *ui;

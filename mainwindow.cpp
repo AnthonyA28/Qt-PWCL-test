@@ -232,12 +232,11 @@ void MainWindow::showRequest(const QString &req)
             ui->outputTable->scrollToBottom();   // scroll to the bottom to ensure the last value is visible
 
         // add each value into the excel file ( the silly math here is to format the float to have only 2 decimals )
-        this->xldoc.write(ui->outputTable->rowCount(), 1,  (static_cast<int>(time*100))/100.0);
-        this->xldoc.write(ui->outputTable->rowCount(), 2,  (static_cast<int>(percentOn*100))/100.0);
-        this->xldoc.write(ui->outputTable->rowCount(), 3,  (static_cast<int>(temp*100))/100.0);
-        this->xldoc.write(ui->outputTable->rowCount(), 4,  (static_cast<int>(tempFilt*100))/100.0);
-        this->xldoc.write(ui->outputTable->rowCount(), 5,  (static_cast<int>(setPoint*100))/100.0);
-        this->xldoc.saveAs(this->excelFileName); // save the doc in case we crash
+        this->xldoc.write(ui->outputTable->rowCount(), 1,  (qRound(time*100))/100.0);
+        this->xldoc.write(ui->outputTable->rowCount(), 2,  (qRound(percentOn*100))/100.0);
+        this->xldoc.write(ui->outputTable->rowCount(), 3,  (qRound(temp*100))/100.0);
+        this->xldoc.write(ui->outputTable->rowCount(), 4,  (qRound(tempFilt*100))/100.0);
+        this->xldoc.write(ui->outputTable->rowCount(), 5,  (qRound(setPoint*100))/100.0);
 
         /*
         *  Update the csv file with the last data read from the port
@@ -568,4 +567,24 @@ bool MainWindow::event(QEvent *event)
         }
     }
     return QMainWindow::event(event);
+}
+
+
+/**
+ * Called when the user clicks the export excel file option in the dropdown menu of file.
+ * Allows the user to choose where to save the file.
+ */
+void MainWindow::on_actionExport_Excel_File_triggered()
+{
+    this->excelFileName = QFileDialog::getSaveFileName(this, //parent
+                                tr("Save File"), //caption
+                                this->excelFileName,  // dir
+                               tr("(*.xlsx)")); // filter
+
+    qDebug() << "Saving excel file with Filename: " << this->excelFileName << "\n";
+
+    if(!this->excelFileName.isNull()) {    // The user chose a valid filname
+        this->xldoc.saveAs(this->excelFileName);
+    }
+
 }
