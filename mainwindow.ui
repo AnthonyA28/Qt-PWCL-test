@@ -1019,7 +1019,7 @@ Point [°C]</string>
            <string notr="true">background-color: rgb(255, 255, 255);</string>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Code2000,Arial Unicode MS,Lucida Sans Unicode'; font-size:9pt; color:#55ff00; background-color:#fbfffe;&quot;&gt;⸺&lt;/span&gt;&lt;span style=&quot; font-family:'arial unicode ms,Lucida Sans Unicode,sans-serif'; font-size:9pt; color:#55ff00; background-color:#ffffff;&quot;&gt;Temp&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Code2000,Arial Unicode MS,Lucida Sans Unicode'; font-size:9pt; color:#0055ff; background-color:#fbfffe;&quot;&gt;⸺&lt;/span&gt;&lt;span style=&quot; font-family:'arial unicode ms,Lucida Sans Unicode,sans-serif'; font-size:9pt; color:#0055ff; background-color:#ffffff;&quot;&gt;Temp&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -1029,7 +1029,7 @@ Point [°C]</string>
            <string notr="true">background-color: rgb(255, 255, 255);</string>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Code2000,Arial Unicode MS,Lucida Sans Unicode'; font-size:9pt; color:#0055ff; background-color:#fbfffe;&quot;&gt;⸺&lt;/span&gt;&lt;span style=&quot; font-family:'arial unicode ms,Lucida Sans Unicode,sans-serif'; font-size:9pt; color:#0055ff; background-color:#ffffff;&quot;&gt;Filt Temp &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Code2000,Arial Unicode MS,Lucida Sans Unicode'; font-size:9pt; color:#00ff00; background-color:#fbfffe;&quot;&gt;⸺&lt;/span&gt;&lt;span style=&quot; font-family:'arial unicode ms,Lucida Sans Unicode,sans-serif'; font-size:9pt; color:#00ff00; background-color:#ffffff;&quot;&gt;Filt Temp &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -1055,7 +1055,7 @@ Point [°C]</string>
      <x>0</x>
      <y>0</y>
      <width>620</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

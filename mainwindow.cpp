@@ -98,12 +98,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->plot->graph(0)->setValueAxis(ui->plot->yAxis2);
 
     ui->plot->addGraph();
-    ui->plot->graph(1)->setName("Temperature");
+    ui->plot->graph(1)->setName("Temperature Filtered");
     ui->plot->graph(1)->setPen(QPen(Qt::green));
     ui->plot->graph(1)->setValueAxis(ui->plot->yAxis2);
 
     ui->plot->addGraph();
-    ui->plot->graph(2)->setName("Temperature Filtered");
+    ui->plot->graph(2)->setName("Temperature");
     ui->plot->graph(2)->setPen(QPen(Qt::blue));
     ui->plot->graph(2)->setValueAxis(ui->plot->yAxis2);
 
@@ -299,8 +299,8 @@ void MainWindow::showRequest(const QString &req)
         *  Place the latest values in the graph
         */
         ui->plot->graph(3)->addData( time,  percentOn);
-        ui->plot->graph(1)->addData( time,  temp);
-        ui->plot->graph(2)->addData( time,  tempFilt);
+        ui->plot->graph(2)->addData( time,  temp);
+        ui->plot->graph(1)->addData( time,  tempFilt);
         ui->plot->graph(0)->addData( time,  setPoint);
         ui->plot->replot( QCustomPlot::rpQueuedReplot );
         ui->plot->rescaleAxes(); // ensure graph fits all data
