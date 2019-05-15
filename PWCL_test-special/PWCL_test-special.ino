@@ -34,7 +34,7 @@
 bool autoEnabled = true;
 //  TUNING
 float Kc = 0;  // controller gain (% power on / deg C)
-float tauI = 3.5;  // integral time constant in min
+float tauI = 3.0;  // integral time constant in min
 float tauD = 0;  // derivative time constant in min
 float tauF = 0; // filter time constant in min.  Rule of thumb: Choose it 0.1-0.2 * tauD
 float KI;  // if (proportionalFlag) {KI = 0} else {KI = Kc / tauI}
