@@ -268,7 +268,7 @@ void MainWindow::showRequest(const QString &req)
         if ( time > scoreTime)  // only show score after scoreTime
             ui->scoreLabel->setText(QString::number(static_cast<double>(inputs[i_score]), 'f', 2)); //show the score precision = 2
 
-        QString ModeString = " ";  // holds a string for current mode ex. "Velocity form, Filtering all terms"
+        QString ModeString = "";  // holds a string for current mode ex. "Velocity form, Filtering all terms"
         if (  positionForm  ) ModeString.append("Position Form ");
         else ModeString.append("Velocity Form");
         if (  filterAll ) ModeString.append("\nFiltering all terms");
@@ -285,13 +285,13 @@ void MainWindow::showRequest(const QString &req)
         // todo: simplify this #p3
         if ( time > 29.0) {
             char rankString[300];
-            snprintf(rankString, sizeof(rankString), "Accident waiting to happen\n") ;
+            snprintf(rankString, sizeof(rankString), "You have earned\nthe rating of:\nAccident waiting to happen\n") ;
             if ( score <= 3.0) {
                 if ( score <= 1.5) {
                     if ( score <= 0.8) {
-                              snprintf(rankString, sizeof(rankString), "You have achieved the rating of\nControl Master");
-                    } else {  snprintf(rankString, sizeof(rankString), "You have achieved the rating of\nControl Student") ; }
-                } else {      snprintf(rankString, sizeof(rankString), "You have achieved the rating of\nProud owner of a learners permit") ; }
+                              snprintf(rankString, sizeof(rankString), "You have achieved\nthe rating of:\nControl Master");
+                    } else {  snprintf(rankString, sizeof(rankString), "You have achieved\nthe rating of:\nControl Student") ; }
+                } else {      snprintf(rankString, sizeof(rankString), "You have achieved\nthe rating of:\nProud owner of a\nlearners permit") ; }
             }
             ui->scoreRankLabel->setText(rankString);
         }
