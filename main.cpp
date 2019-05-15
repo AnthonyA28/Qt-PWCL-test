@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mainwindow.h"
 #include <QApplication>
 
-FILE *pFile= fopen("appOutput.log", "w");
+FILE *pFile= fopen(".log", "w");
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
