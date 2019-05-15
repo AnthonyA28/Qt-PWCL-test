@@ -86,10 +86,10 @@ private:
     const unsigned int i_tauF          = 3;       // for input & output
     const unsigned int i_positionForm  = 4;       // for input & output
     const unsigned int i_filterAll     = 5;       // for input & output
-    const unsigned int i_mode          = 6;       // for input & output
-    const unsigned int i_setPoint      = 7;       // for input & output
-    const unsigned int i_percentOn     = 8;       // for input & output
-    const unsigned int i_fanSpeed      = 9;       // for input & output
+    const unsigned int i_pOnNominal    = 6;       // for input & output
+    const unsigned int i_setPoint      = 7;       // for input
+    const unsigned int i_percentOn     = 8;       // for input
+    const unsigned int i_fanSpeed      = 9;       // for input
     const unsigned int i_temperature   = 10;      // for input
     const unsigned int i_tempFiltered  = 11;      // for input
     const unsigned int i_time          = 12;      // for input
@@ -97,6 +97,8 @@ private:
     const unsigned int i_avg_err       = 14;      // for input
     const unsigned int i_score         = 15;      // for input
     const unsigned int numInputs       = 16;
+
+    float nominalPercentOn = 0;
 
 protected:
     bool event(QEvent *event);

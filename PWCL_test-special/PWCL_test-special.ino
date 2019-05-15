@@ -31,7 +31,6 @@
 //  authored by Wilbur Woo.
 
 
-bool autoEnabled = true;
 //  TUNING
 float Kc = 0;  // controller gain (% power on / deg C)
 float tauI = 3.0;  // integral time constant in min
@@ -113,7 +112,7 @@ const unsigned int i_tauD         = 2;  //  for input & output
 const unsigned int i_tauF         = 3;  //  for input & output
 const unsigned int i_positionForm = 4;  //  for input & output
 const unsigned int i_filterAll    = 5;  //  for input & output
-const unsigned int i_mode         = 6;  //  for output
+const unsigned int i_pOnNominal   = 6;  //  for input & output
 const unsigned int i_setPoint     = 7;  //  for output
 const unsigned int i_percentOn    = 8;  //  for output
 const unsigned int i_fanSpeed     = 9;  //  for output
@@ -123,14 +122,14 @@ const unsigned int i_time         = 12; //  for output
 const unsigned int i_inputVar     = 13; //  for output
 const unsigned int i_avg_err      = 14; //  for output
 const unsigned int i_score        = 15; //  for output
-const unsigned int numInputs      = 6;
+const unsigned int numInputs      = 7;
 const unsigned int numOutputs     = 16;
 // initialize the input and output arrays
 const unsigned int bufferSize = 300;
 char inputbuffer[bufferSize];
 char outputbuffer[bufferSize]; // its much better for the memory to be using a char* rather than a string
-float inputs[numInputs]   ={Kc, tauI, tauD, tauF, float(positionFlag), float(filterAll)};
-float outputs[numOutputs] ={Kc, tauI, tauD, tauF, float(positionFlag), float(filterAll), float(autoEnabled), TsetPoint, percentRelayOn, fanSpeed, temperature , tempFiltered, 0, Ju, Jy, J };
+float inputs[numInputs]   ={Kc, tauI, tauD, tauF, float(positionFlag), float(filterAll), float(percentRelayOnNominal)};
+float outputs[numOutputs] ={Kc, tauI, tauD, tauF, float(positionFlag), float(filterAll), float(percentRelayOnNominal), TsetPoint, percentRelayOn, fanSpeed, temperature , tempFiltered, 0, Ju, Jy, J };
 
 void serialize_array(float input[], char * output); // declare the function so it can be placed under where it is used
 bool deserialize_array(const char * input, unsigned int output_size, float output[]); // declare the function so it can be placed under where it is used
@@ -321,35 +320,33 @@ void loop(void) {  //MAIN CODE iterates indefinitely
   J = 0.65 * Jy + 0.35 * Ju;
 
   //CONTROL LAW CALCULATIONS
-  if (autoEnabled) {
-    if (!positionFlag) {
-      float percentOnPrevious = percentRelayOn;
-      float PropInt = percentOnPrevious + Kc *(error - errorPrev) + Dt * Kc * error / tauI ;
-      //Note:  To eliminate set-point kick (at the expense of slower responses to set-point changes) use:
-      //float PropInt = percentOnPrevious + Kc *(-temperature + temperaturePrev) + Dt * Kc * error / tauI ;
-      float unconstrainedPercentRelayOn = PropInt + Kc*tauD/Dt*(-tempFiltered+2.*tempFiltPrev-tempFiltPrevPrev);
-      if (unconstrainedPercentRelayOn < 0.) {percentRelayOn = 0.;}
-      else if (unconstrainedPercentRelayOn > 100.) {percentRelayOn = 100.;}
-      else {percentRelayOn = unconstrainedPercentRelayOn;}
+  if (!positionFlag) {
+    float percentOnPrevious = percentRelayOn;
+    float PropInt = percentOnPrevious + Kc *(error - errorPrev) + Dt * Kc * error / tauI ;
+    //Note:  To eliminate set-point kick (at the expense of slower responses to set-point changes) use:
+    //float PropInt = percentOnPrevious + Kc *(-temperature + temperaturePrev) + Dt * Kc * error / tauI ;
+    float unconstrainedPercentRelayOn = PropInt + Kc*tauD/Dt*(-tempFiltered+2.*tempFiltPrev-tempFiltPrevPrev);
+    if (unconstrainedPercentRelayOn < 0.) {percentRelayOn = 0.;}
+    else if (unconstrainedPercentRelayOn > 100.) {percentRelayOn = 100.;}
+    else {percentRelayOn = unconstrainedPercentRelayOn;}
+  }
+  else {
+    if (noIntegralFlag) {KI = 0;}
+    else {KI = Kc / tauI;}
+    sumForIntegral += KI*error;
+    float PropInt = percentRelayOnNominal + Kc * error + Dt * sumForIntegral;
+    float unconstrainedPercentRelayOn = PropInt + Kc*tauD/Dt*(-tempFiltered + tempFiltPrev);
+    if (unconstrainedPercentRelayOn < 0.) {
+      float woInt = percentRelayOnNominal + Kc * error + Kc*tauD/Dt*(-tempFiltered + tempFiltPrev);
+      sumForIntegral = (0-woInt)/Dt; //anti reset windup
+      percentRelayOn = 0.;
     }
-    else {
-      if (noIntegralFlag) {KI = 0;}
-      else {KI = Kc / tauI;}
-      sumForIntegral += KI*error;
-      float PropInt = percentRelayOnNominal + Kc * error + Dt * sumForIntegral;
-      float unconstrainedPercentRelayOn = PropInt + Kc*tauD/Dt*(-tempFiltered + tempFiltPrev);
-      if (unconstrainedPercentRelayOn < 0.) {
-        float woInt = percentRelayOnNominal + Kc * error + Kc*tauD/Dt*(-tempFiltered + tempFiltPrev);
-        sumForIntegral = (0-woInt)/Dt; //anti reset windup
-        percentRelayOn = 0.;
-      }
-      else if (unconstrainedPercentRelayOn > 100.) {
-        float woInt = percentRelayOnNominal + Kc * error + Kc*tauD/Dt*(-tempFiltered + tempFiltPrev);
-        sumForIntegral = (100 - woInt)/Dt; //anti reset windup
-        percentRelayOn = 100.;
-      }
-      else {percentRelayOn = unconstrainedPercentRelayOn;}
+    else if (unconstrainedPercentRelayOn > 100.) {
+      float woInt = percentRelayOnNominal + Kc * error + Kc*tauD/Dt*(-tempFiltered + tempFiltPrev);
+      sumForIntegral = (100 - woInt)/Dt; //anti reset windup
+      percentRelayOn = 100.;
     }
+    else {percentRelayOn = unconstrainedPercentRelayOn;}
   }
   relayCare();
   //REST OF LOOP AFTER CONTROL ACTION
@@ -364,14 +361,13 @@ void loop(void) {  //MAIN CODE iterates indefinitely
   }
 
     /* place current values in the output array */
-  outputs[i_mode]         = autoEnabled;
+  outputs[i_pOnNominal]   = percentRelayOnNominal;
   outputs[i_kc]           = Kc;
   outputs[i_tauI]         = tauI;
   outputs[i_tauD]         = tauD;
   outputs[i_tauF]         = tauF;
   outputs[i_positionForm] = positionFlag;
   outputs[i_filterAll]    = filterAll;
-  outputs[i_mode]         = autoEnabled;
   outputs[i_setPoint]     = TsetPoint;
   outputs[i_percentOn]    = percentRelayOn;
   outputs[i_fanSpeed]     = fanSpeed;
@@ -394,14 +390,13 @@ void loop(void) {  //MAIN CODE iterates indefinitely
   /*
   Here we will change any values that must be changed
   */
-  if ( autoEnabled){  // if in automatic, set the tuning parameters
-    Kc            = inputs[i_kc];
-    tauI          = inputs[i_tauI];
-    tauD          = inputs[i_tauD];
-    tauF          = inputs[i_tauF];
-    filterAll     = inputs[i_filterAll];
-    positionFlag  = inputs[i_positionForm];
-  }
+  Kc                    = inputs[i_kc];
+  tauI                  = inputs[i_tauI];
+  tauD                  = inputs[i_tauD];
+  tauF                  = inputs[i_tauF];
+  filterAll             = inputs[i_filterAll];
+  positionFlag          = inputs[i_positionForm];
+  percentRelayOnNominal = inputs[i_pOnNominal];
 }
 
 /**

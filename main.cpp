@@ -23,6 +23,8 @@ FILE *pFile= fopen("appOutput.log", "w");
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
+    Q_UNUSED( type ) Q_UNUSED( context ) // to ignore the unused parameter warning
+
     QByteArray localMsg = msg.toLocal8Bit();
     fprintf(pFile, "%s", localMsg.constData());
     fflush(pFile);
@@ -31,7 +33,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 
 int main(int argc, char *argv[])
 {
-    qInstallMessageHandler(myMessageOutput); // Install the handler
+//    qInstallMessageHandler(myMessageOutput); // Install the handler
 
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
@@ -39,7 +41,8 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
+    fclose (pFile);
+
     return a.exec();
 
-    fclose (pFile);
 }

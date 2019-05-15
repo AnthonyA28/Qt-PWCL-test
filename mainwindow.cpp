@@ -99,7 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->plot->addGraph();
     ui->plot->graph(1)->setName("Temperature Filtered");
-    ui->plot->graph(1)->setPen(QPen(Qt::green));
+    ui->plot->graph(1)->setPen(QPen(qRgb(0,100,0)));
     ui->plot->graph(1)->setValueAxis(ui->plot->yAxis2);
 
     ui->plot->addGraph();
@@ -214,6 +214,8 @@ void MainWindow::showRequest(const QString &req)
         double input_var  = static_cast<double>(inputs[i_input_var]);
         bool positionForm = static_cast<bool>(inputs[i_positionForm]);
         bool filterAll    = static_cast<bool>(inputs[i_filterAll]);
+        this->nominalPercentOn = inputs[i_pOnNominal];
+
 
 
         /*
@@ -264,7 +266,7 @@ void MainWindow::showRequest(const QString &req)
             ui->inputVarLabel->setText( QString::number(input_var, 'f', 2));
         }
         if ( time > scoreTime)  // only show score after scoreTime
-            ui->scoreLabel->setText(QString::number(inputs[i_score], 'f', 2)); //show the score precision = 2
+            ui->scoreLabel->setText(QString::number(static_cast<double>(inputs[i_score]), 'f', 2)); //show the score precision = 2
 
         QString ModeString = " ";  // holds a string for current mode ex. "Velocity form, Filtering all terms"
         if (  positionForm  ) ModeString.append("Position Form ");
@@ -389,7 +391,9 @@ void MainWindow::on_setButton_clicked()
         // these two have a different order in the main program but its okay
         // todo: consider fixing that #p2
         response.append( ui->posFormCheckBox->isChecked()   ? "1," : "0," );
-        response.append( ui->filterAllCheckBox->isChecked() ? "1]" : "0]" );
+        response.append( ui->filterAllCheckBox->isChecked() ? "1," : "0," );
+        response.append( QString::number(static_cast<double>(this->nominalPercentOn)));
+        response.append("]");
 
         emit this->response(response);
     } else {
@@ -411,6 +415,8 @@ void MainWindow::on_setButton_clicked()
 */
 void MainWindow::timerEvent(QTimerEvent *event)
 {
+    Q_UNUSED( event ) // to ignore the unused parameter warning
+
     if (!port.L_isConnected()) {
         QList<QSerialPortInfo> portList = QSerialPortInfo::availablePorts();
         // todo: check what hapens if the socket changes. This may be an issue if we change the COM before establishing a connection  #p2
@@ -513,9 +519,16 @@ bool MainWindow::deserializeArray(const char* const input, unsigned int output_s
 */
 void MainWindow::on_posFormCheckBox_stateChanged(int arg1)
 {
+    Q_UNUSED( arg1 ) // to ignore the unused parameter warning
+    if(ui->posFormCheckBox->isChecked()){ // The position for box is checked so we need to reques the nominal percent on
+        bool ok;
+        this->nominalPercentOn = static_cast<float>(QInputDialog::getDouble(this, tr("Position Form"),
+                                           tr("Nominal Percent On:"), static_cast<double>(this->nominalPercentOn), 0, 100, 2 , &ok));
+        if (!ok){
+        }
+    }
     emit on_setButton_clicked();
 }
-
 
 
 /**
@@ -524,6 +537,8 @@ void MainWindow::on_posFormCheckBox_stateChanged(int arg1)
 */
 void MainWindow::on_filterAllCheckBox_stateChanged(int arg1)
 {
+    Q_UNUSED( arg1 ) // to ignore the unused parameter warning
+
     emit on_setButton_clicked();
 }
 
@@ -550,6 +565,7 @@ bool MainWindow::disonnectedPopUpWindow()
                           "Close and restart the application to continue.\n",
                           QMessageBox::Ok
                           );
+    return true;
 }
 
 
