@@ -31,6 +31,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using namespace QXlsx;
 
 #include "port.h"
+#include "PWCL_test\com.h"
+
+#define i_kc            0
+#define i_tauI          1
+#define i_tauD          2
+#define i_tauF          3
+#define i_positionForm  4
+#define i_filterAll     5
+#define i_pOnNominal    6
+#define i_setPoint      7
+#define i_percentOn     8
+#define i_fanSpeed      9
+#define i_temperature   10
+#define i_tempFiltered  11
+#define i_time          12
+#define i_inputVar      13
+#define i_avg_err       14
+#define i_score         15
 
 
 namespace Ui {
@@ -60,6 +78,8 @@ private slots:
     void on_actionExport_Excel_File_triggered();
 
 private:
+    COM com;
+
 
     Ui::MainWindow *ui;
 
@@ -76,27 +96,6 @@ private:
 
     bool deserializeArray(const char* const input, unsigned int output_size, std::vector<float>& output);
     std::vector<float> inputs;  // Holds values read from the port ordered below
-
-    /*
-    * Assign the index in which these values will exist in the 'inputs' and 'outputs' arrays
-    */
-    const unsigned int i_kc            = 0;       // for input & output
-    const unsigned int i_tauI          = 1;       // for input & output
-    const unsigned int i_tauD          = 2;       // for input & output
-    const unsigned int i_tauF          = 3;       // for input & output
-    const unsigned int i_positionForm  = 4;       // for input & output
-    const unsigned int i_filterAll     = 5;       // for input & output
-    const unsigned int i_pOnNominal    = 6;       // for input & output
-    const unsigned int i_setPoint      = 7;       // for input
-    const unsigned int i_percentOn     = 8;       // for input
-    const unsigned int i_fanSpeed      = 9;       // for input
-    const unsigned int i_temperature   = 10;      // for input
-    const unsigned int i_tempFiltered  = 11;      // for input
-    const unsigned int i_time          = 12;      // for input
-    const unsigned int i_input_var     = 13;      // for input
-    const unsigned int i_avg_err       = 14;      // for input
-    const unsigned int i_score         = 15;      // for input
-    const unsigned int numInputs       = 16;
 
     float nominalPercentOn = 0;
 

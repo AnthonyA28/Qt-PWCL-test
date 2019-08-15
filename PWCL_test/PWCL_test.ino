@@ -46,6 +46,7 @@ float sumForIntegral = 0;
 
 // //PRELIMINARIES
 #include <OneWire.h> //library for DS18B20
+#include "com.h"
 
 //Soft serial pins
 #define rxPin 8   //connect to green wire of CP210 or to orange wire of FTDI
@@ -106,35 +107,59 @@ float TsetPoint = Tsp[1];  // deg C
 int tdelay = 3; //delay in msec used with serial interaction commands
 int tGETSET = 1000;  //delay before some GET and SET commands
 
-// defining some indices to be used for the input and output arrays
-const unsigned int i_kc           = 0;  //  for input & output
-const unsigned int i_tauI         = 1;  //  for input & output
-const unsigned int i_tauD         = 2;  //  for input & output
-const unsigned int i_tauF         = 3;  //  for input & output
-const unsigned int i_positionForm = 4;  //  for input & output
-const unsigned int i_filterAll    = 5;  //  for input & output
-const unsigned int i_pOnNominal   = 6;  //  for input & output
-const unsigned int i_setPoint     = 7;  //  for output
-const unsigned int i_percentOn    = 8;  //  for output
-const unsigned int i_fanSpeed     = 9;  //  for output
-const unsigned int i_temperature  = 10; //  for output
-const unsigned int i_tempFiltered = 11; //  for output
-const unsigned int i_time         = 12; //  for output
-const unsigned int i_inputVar     = 13; //  for output
-const unsigned int i_avg_err      = 14; //  for output
-const unsigned int i_score        = 15; //  for output
-const unsigned int numInputs      = 7;
-const unsigned int numOutputs     = 16;
-// initialize the input and output arrays
-const unsigned int bufferSize = 300;
-char inputbuffer[bufferSize];
-char outputbuffer[bufferSize]; // its much better for the memory to be using a char* rather than a string
-float inputs[numInputs]   ={Kc, tauI, tauD, tauF, float(positionFlag), float(filterAll), float(percentRelayOnNominal)};
-float outputs[numOutputs] ={Kc, tauI, tauD, tauF, float(positionFlag), float(filterAll), float(percentRelayOnNominal), TsetPoint, percentRelayOn, fanSpeed, temperature , tempFiltered, 0, Ju, Jy, J };
+/******shared between C++ code */
+#define i_kc            0
+#define i_tauI          1
+#define i_tauD          2
+#define i_tauF          3
+#define i_positionForm  4
+#define i_filterAll     5
+#define i_pOnNominal    6
+#define i_setPoint      7
+#define i_percentOn     8
+#define i_fanSpeed      9
+#define i_temperature   10
+#define i_tempFiltered  11
+#define i_time          12
+#define i_inputVar      13
+#define i_avg_err       14
+#define i_score         15
+#define NUMVARS         16
+#define BUFFERSIZE 500
 
-void serialize_array(float input[], char * output); // declare the function so it can be placed under where it is used
-bool deserialize_array(const char * input, unsigned int output_size, float output[]); // declare the function so it can be placed under where it is used
-void check_input(); // declare the function so it can be placed under where it is used
+COM com;
+
+char buffer[BUFFERSIZE];
+void check_input()
+{
+  // checks for input from the port and potentially changes parameters
+  /*  I dont use the serial.readString becuse it will read ANY size input
+  presenting the possibiliity of a buffer overflow. this will read up to a closing bracket
+  or until the input buffer is at max capacity.
+  */
+  if (Serial.available()) {
+    int j = 0;
+    for (unsigned int i = 0; i < BUFFERSIZE - 1 && j < 500; i ++) {
+      char c = Serial.read();
+      if ( c == -1){
+        i -=1;
+        j +=1;
+        continue;
+      }
+      buffer[i] = c; // place this character in the input buffer
+      if (c == ']' || c == '\0' ) { // stop reading chracters if we have read the last bracket or a null charcter
+        buffer[i+1] = '\0'; // this will null terminate the buffer
+        break;
+      }
+      if (c == '!')
+        shutdown();
+      delay(10);
+    }
+    while (Serial.available())
+      char _ = Serial.read(); // this throws aways any other character in the buffer after the first right bracket
+    com.deserialize_array(buffer);
+  }
+}
 
 void setFanPwmFrequency(int pin, int divisor) {
   //From http://playground.arduino.cc/Code/PwmFrequency?action=sourceblock&num=2
@@ -363,27 +388,26 @@ void loop(void) {  //MAIN CODE iterates indefinitely
   }
 
     /* place current values in the output array */
-  outputs[i_pOnNominal]   = percentRelayOnNominal;
-  outputs[i_kc]           = Kc;
-  outputs[i_tauI]         = tauI;
-  outputs[i_tauD]         = tauD;
-  outputs[i_tauF]         = tauF;
-  outputs[i_positionForm] = positionFlag;
-  outputs[i_filterAll]    = filterAll;
-  outputs[i_setPoint]     = TsetPoint;
-  outputs[i_percentOn]    = percentRelayOn;
-  outputs[i_fanSpeed]     = fanSpeed;
-  outputs[i_temperature]  = temperature;
-  outputs[i_tempFiltered] = tempFiltered;
-  outputs[i_time]         = millis() /60000.0;
-  outputs[i_inputVar]     = Ju;
-  outputs[i_avg_err]      = Jy;
-  outputs[i_score]        = J;
+  com.set(i_pOnNominal, percentRelayOnNominal);
+  com.set(i_kc, Kc);
+  com.set(i_tauI, tauI);
+  com.set(i_tauD, tauD);
+  com.set(i_tauF, tauF);
+  com.set(i_positionForm, positionFlag);
+  com.set(i_filterAll, filterAll);
+  com.set(i_setPoint, TsetPoint);
+  com.set(i_percentOn, percentRelayOn);
+  com.set(i_fanSpeed, fanSpeed);
+  com.set(i_temperature, temperature);
+  com.set(i_tempFiltered, tempFiltered);
+  com.set(i_time, millis() /60000.0);
+  com.set(i_inputVar, Ju);
+  com.set(i_avg_err, Jy);
+  com.set(i_score, J);
 
   /* fill the ouput char buffer with the contents of the output array */
-  serialize_array(outputs, outputbuffer);
-  Serial.println(outputbuffer); // send the output buffer to the port
-
+  //// dont need this // Serial.println(buffer); // send the output buffer to the port
+  com.printCurVals();
   while ( millis() < tLoopStart + stepSize ){
     relayCare();
     check_input();
@@ -392,132 +416,11 @@ void loop(void) {  //MAIN CODE iterates indefinitely
   /*
   Here we will change any values that must be changed
   */
-  Kc                    = inputs[i_kc];
-  tauI                  = inputs[i_tauI];
-  tauD                  = inputs[i_tauD];
-  tauF                  = inputs[i_tauF];
-  filterAll             = inputs[i_filterAll];
-  positionFlag          = inputs[i_positionForm];
-  percentRelayOnNominal = inputs[i_pOnNominal];
-}
-
-/**
-  Fills <output> with a string representation of the <input[]> array.
-*/
-void serialize_array(float input[], char * output)
-{
-  char tmp[15];
-  unsigned int index = 0;
-  unsigned int tmp_size;
-  memcpy(& output[index], "[", 1);
-  index++;
-  for (unsigned int i = 0; i < numOutputs - 1; i++)
-  {
-    dtostrf(input[i], 0, 4, tmp); // (val, minimum width, precision , str)
-    tmp_size = strlen(tmp);
-    memcpy(& output[index], tmp, tmp_size);
-    index += tmp_size;
-    const char * comma  = ",";
-    memcpy(& output[index], comma, 1);
-    index += 1;
-  }
-  dtostrf(input[numOutputs - 1], 0, 4, tmp);
-  tmp_size = strlen(tmp);
-  memcpy(& output[index], tmp, tmp_size);
-  index += tmp_size;
-  memcpy(& output[index], "]", 1);
-  index += 1;
-  const char * null  = "\0";
-  memcpy(& output[index], null, 1);
-}
-
-
-
-
-/**
-Transforms the <input> string to a float array <output> of known <output_size>
-*/
-bool deserialize_array(const char* const input, unsigned int output_size,  float output[] )
-{
-        /*
-    Ensure that the input string has the correct format and number of numbers to be parsed
-    */
-    const char*  p = input;
-    unsigned int num_commas     = 0;
-    unsigned int num_brackets   = 0;
-    unsigned int num_values     = 0;
-
-    while (*p)
-    {
-      if (*p == '[') { num_brackets++;
-      } else if ( *p == ']' ) {num_brackets++; num_values++;
-      } else if ( *p == ',' ) {num_commas++; num_values++;
-      } p++;
-    }
-    if (num_brackets != 2) {
-        Serial.print("(A) Parse error, not valid array\n");
-        return false;
-    }
-    if (num_values != output_size) {
-        Serial.print("(A) Parse error, input size incorrect\n");
-        return false;
-    }
-
-
-   char* pEnd;
-   p = input + 1;
-   for ( unsigned int i = 0; i < output_size; i ++ )
-   {
-
-        bool is_a_number = false;
-        const char* nc = p; // nc will point to the next comma or the closing bracket
-        while(*nc != ',' && *nc != ']' && *nc)
-        {
-            if ( (int)*nc >= 48 && (int)*nc <= 57 )
-                is_a_number = true;
-            nc++;
-        }
-        if ( is_a_number )
-        {
-           output[i] = strtod(p, &pEnd); // strtof can returns nan when parsing nans,
-           // strod returns 0 when parsing nans
-           p = pEnd;
-        }
-        while (*p != ',' && *p != ']' && *p)
-            p++;
-        p++;
-   }
-   p = input;
-   return true;
-}
-
-
-/**
-  Checks the port for any incoming data. If new data has arrived, it will be used to set the current values.
-*/
-void check_input()
-{
-  // checks for input from the port and potentially changes parameters
-  /*  I dont use the serial.readString becuse it will read ANY size input
-  presenting the possibiliity of a buffer overflow. this will read up to a closing bracket
-  or until the input buffer is at max capacity.
-  */
-  if (Serial.available()) {
-    for (unsigned int i = 0; i < bufferSize - 1; i ++)
-    {
-      char c = Serial.read();
-      inputbuffer[i] = c; // place this character in the input buffer
-      if (c == ']' || c == '\0' ) { // stop reading chracters if we have read the last bracket or a null charcter
-        inputbuffer[i+1] = '\0'; // this will null terminate the inputbuffer
-        break;
-      }
-      if (c == '!')
-        shutdown();
-      delay(10);
-    }
-    while (Serial.available())
-      char _ = Serial.read(); // this throws aways any other character in the buffer after the first right bracket
-    deserialize_array(inputbuffer, numInputs, inputs);
-  }
-
+  Kc                    = com.get(i_kc);
+  tauI                  = com.get(i_tauI);
+  tauD                  = com.get(i_tauD);
+  tauF                  = com.get(i_tauF);
+  filterAll             = com.get(i_filterAll);
+  positionFlag          = com.get(i_positionForm);
+  percentRelayOnNominal = com.get(i_pOnNominal);
 }

@@ -36,8 +36,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->timerId = startTimer(250);
     // indicates when we are connected to the port AND the correct arduino program is being run
     this->validConnection = false;
-    // initialize the input vector to hold the input values from the port
-    this->inputs = std::vector<float>(this->numInputs);
     // have the table resize with the window
     ui->outputTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     // disable any user input into the text boxes (until a connection is made)
@@ -172,7 +170,9 @@ void MainWindow::showRequest(const QString &req)
     }
 
 
-    if(this->deserializeArray(req.toStdString().c_str(), this->numInputs, this->inputs)){
+    QByteArray ba = req.toLocal8Bit();
+    char *c_str = ba.data();
+    if(com.deserialize_array( c_str )) {
 
         if (!this->validConnection) {
             this->validConnection = true;  // String was parsed therefore the correct arduino program is uploaded
@@ -199,22 +199,22 @@ void MainWindow::showRequest(const QString &req)
 
         }
 
-        double time       = static_cast<double>(inputs[i_time]);
-        double percentOn  = static_cast<double>(inputs[i_percentOn]);
-        double temp       = static_cast<double>(inputs[i_temperature]);
-        double tempFilt   = static_cast<double>(inputs[i_tempFiltered]);
-        double setPoint   = static_cast<double>(inputs[i_setPoint]);
-        double fanSpeed   = static_cast<double>(inputs[i_fanSpeed]);
-        double kc         = static_cast<double>(inputs[i_kc]);
-        double tauI       = static_cast<double>(inputs[i_tauI]);
-        double tauD       = static_cast<double>(inputs[i_tauD]);
-        double tauF       = static_cast<double>(inputs[i_tauF]);
-        double score      = static_cast<double>(inputs[i_score]);
-        double avg_err    = static_cast<double>(inputs[i_avg_err]);
-        double input_var  = static_cast<double>(inputs[i_input_var]);
-        bool positionForm = static_cast<bool>(inputs[i_positionForm]);
-        bool filterAll    = static_cast<bool>(inputs[i_filterAll]);
-        this->nominalPercentOn = inputs[i_pOnNominal];
+        double time       = static_cast<double>(com.get(i_time));
+        double percentOn  = static_cast<double>(com.get(i_percentOn));
+        double temp       = static_cast<double>(com.get(i_temperature));
+        double tempFilt   = static_cast<double>(com.get(i_tempFiltered));
+        double setPoint   = static_cast<double>(com.get(i_setPoint));
+        double fanSpeed   = static_cast<double>(com.get(i_fanSpeed));
+        double kc         = static_cast<double>(com.get(i_kc));
+        double tauI       = static_cast<double>(com.get(i_tauI));
+        double tauD       = static_cast<double>(com.get(i_tauD));
+        double tauF       = static_cast<double>(com.get(i_tauF));
+        double score      = static_cast<double>(com.get(i_score));
+        double avg_err    = static_cast<double>(com.get(i_avg_err));
+        double input_var  = static_cast<double>(com.get(i_inputVar));
+        bool positionForm = static_cast<bool>(com.get(i_positionForm));
+        bool filterAll    = static_cast<bool>(com.get(i_filterAll));
+        this->nominalPercentOn = com.get(i_pOnNominal);
 
 
 
@@ -344,7 +344,6 @@ void MainWindow::on_setButton_clicked()
                     msgBox.setText(name + " is not valid" );
                     msgBox.exec();
                     textBox->clear();
-                    response.append("_");
                     return;
                 } else {
                     // ensure the value is within range
@@ -353,7 +352,6 @@ void MainWindow::on_setButton_clicked()
                         msgBox.setText(name + " of " + QString::number(static_cast<double>(val)) + " is over the maximum of " + QString::number(static_cast<double>(max)) );
                         msgBox.exec();
                         textBox->clear();
-                        response.append("_");
                         return;
                     }
                 if  (min != NAN && val < min){ // min is NAN if it is unconstrained
@@ -361,14 +359,12 @@ void MainWindow::on_setButton_clicked()
                         msgBox.setText(name + " of " + QString::number(static_cast<double>(val)) + " is below the minimum of " + QString::number(static_cast<double>(min)) );
                         msgBox.exec();
                         textBox->clear();
-                        response.append("_");
                         return;
                     }
                     response.append(valStr);
                     return;
                 }
             }
-            response.append("_");
             return;
         };
 
@@ -393,6 +389,7 @@ void MainWindow::on_setButton_clicked()
         response.append( ui->posFormCheckBox->isChecked()   ? "1," : "0," );
         response.append( ui->filterAllCheckBox->isChecked() ? "1," : "0," );
         response.append( QString::number(static_cast<double>(this->nominalPercentOn)));
+        response.append(",,,,,,,,,,"); // [kc ,tauI ,tauD ,tauF ,positionForm ,filterAll ,pOnNominal ,setPoint ,percentOn ,fanSpeed ,temperature ,tempFiltered ,time ,inputVar ,avg_err ,score,]
         response.append("]");
 
         emit this->response(response);
@@ -451,66 +448,6 @@ void MainWindow::on_portComboBox_activated(int index)
 
 
 
-/**
-*   Called after new data is recieved from the port to parse the string recieved.
-*   fills 'output' of five 'output_size' with the vlues in 'input' string.
-*/
-bool MainWindow::deserializeArray(const char* const input, unsigned int output_size,  std::vector<float> &output)
-{
-    /*
-    *   Ensure that the input string has the correct format and number of numbers to be parsed
-    */
-    const char*  p = input;
-    unsigned int num_commas     = 0;
-    unsigned int num_brackets   = 0;
-    unsigned int num_values     = 0;
-
-    while (*p)
-    {
-      if (*p == '[') { num_brackets++;
-      } else if ( *p == ']' ) {num_brackets++; num_values++;
-      } else if ( *p == ',' ) {num_commas++; num_values++;
-      } p++;
-    }
-    if (num_brackets != 2) {
-        qDebug() << "(M) Parse error, not valid array\n";
-        return false;
-    }
-    if (num_values != output_size) {
-        qDebug() << "(M) Parse error, input size incorrect\n";
-        return false;
-    }
-
-
-    /*
-    *   Correct number of parameters were found,
-    *   'output' will not be filled with the values
-    */
-    char* pEnd;
-    p = input + 1;
-    for ( unsigned int i = 0; i < output_size; i ++ )
-    {
-
-        bool is_a_number = false;
-        const char* nc = p; // nc will point to the next comma or the closing bracket
-        while(*nc != ',' && *nc != ']' && *nc)
-        {
-            if ( (int)*nc >= 48 && (int)*nc <= 57 )
-                is_a_number = true;
-            nc++;
-        }
-        float num_ = output[i] = strtof(p, &pEnd); // strtof can returns nan when parsing nans,
-           // strod returns 0 when parsing nans
-        p = pEnd;
-        if ( is_a_number || num_ == NAN)
-            output[i] = num_;
-        while (*p != ',' && *p != ']' && *p)
-            p++;
-        p++;
-   }
-   p = input;
-   return true;
-}
 
 
 /**
