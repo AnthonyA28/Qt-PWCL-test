@@ -100,8 +100,6 @@ private:
     QFile csvdoc;
     QMediaPlayer* player;
 
-    bool deserializeArray(const char* const input, unsigned int output_size, std::vector<float>& output);
-
     float nominalPercentOn = 0;
 
 protected:
