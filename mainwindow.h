@@ -95,7 +95,6 @@ private:
     QMediaPlayer* player;
 
     bool deserializeArray(const char* const input, unsigned int output_size, std::vector<float>& output);
-    std::vector<float> inputs;  // Holds values read from the port ordered below
 
     float nominalPercentOn = 0;
 

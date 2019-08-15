@@ -33,7 +33,8 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 
 int main(int argc, char *argv[])
 {
-    qInstallMessageHandler(myMessageOutput); // Install the handler
+    bool release = false;
+    if( release ) qInstallMessageHandler(myMessageOutput); // Install the handler
 
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
@@ -41,7 +42,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    fclose (pFile);
+    if(release) fclose (pFile);
 
     return a.exec();
 

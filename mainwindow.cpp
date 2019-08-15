@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // create the media player
     this->player = new QMediaPlayer;
-    player->setMedia(QUrl::fromLocalFile(execDir+"/audio/alarm.wav"));
+    player->setMedia(QUrl("qrc:/sound/alarm.wav"));
 
 
     // Create file titles with the current date and time
@@ -156,13 +156,14 @@ MainWindow::~MainWindow()
 */
 void MainWindow::showRequest(const QString &req)
 {
+
     if (req.contains('!')) {
         ui->emergencyMessageLabel->setText(req);
-            ui->scoreLabel->setNum(static_cast<double>(inputs[i_score])); //show the score
+            ui->scoreLabel->setNum(static_cast<double>(com.get(i_score))); //show the score
         if(req.contains("overheat")) {
             player->setVolume(100);
             player->play();
-            ui->scoreLabel->setText(QString::number(static_cast<double>(inputs[i_score]), 'f', 2)); //show the score precision = 2
+            ui->scoreLabel->setText(QString::number(static_cast<double>(com.get(i_score)), 'f', 2)); //show the score precision = 2
             ui->scoreRankLabel->setText("You have earned the rating of\nProfessional Crash Test Dummy" );
 
         }
@@ -266,7 +267,7 @@ void MainWindow::showRequest(const QString &req)
             ui->inputVarLabel->setText( QString::number(input_var, 'f', 2));
         }
         if ( time > scoreTime)  // only show score after scoreTime
-            ui->scoreLabel->setText(QString::number(static_cast<double>(inputs[i_score]), 'f', 2)); //show the score precision = 2
+            ui->scoreLabel->setText(QString::number(static_cast<double>(com.get(i_score)), 'f', 2)); //show the score precision = 2
 
         QString ModeString = "";  // holds a string for current mode ex. "Velocity form, Filtering all terms"
         if (  positionForm  ) ModeString.append("Position Form ");
