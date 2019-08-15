@@ -767,23 +767,23 @@
         <attribute name="horizontalHeaderCascadingSectionResizes">
          <bool>true</bool>
         </attribute>
-        <attribute name="horizontalHeaderHighlightSections">
-         <bool>false</bool>
-        </attribute>
         <attribute name="horizontalHeaderMinimumSectionSize">
          <number>20</number>
         </attribute>
+        <attribute name="horizontalHeaderHighlightSections">
+         <bool>false</bool>
+        </attribute>
         <attribute name="verticalHeaderVisible">
          <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderMinimumSectionSize">
+         <number>20</number>
         </attribute>
         <attribute name="verticalHeaderDefaultSectionSize">
          <number>29</number>
         </attribute>
         <attribute name="verticalHeaderHighlightSections">
          <bool>false</bool>
-        </attribute>
-        <attribute name="verticalHeaderMinimumSectionSize">
-         <number>20</number>
         </attribute>
         <row>
          <property name="text">
@@ -1040,6 +1040,33 @@ Point [°C]</string>
           </property>
           <property name="text">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Code2000,Arial Unicode MS,Lucida Sans Unicode'; font-size:9pt; color:#55007f; background-color:#fbfffe;&quot;&gt;⸺&lt;/span&gt;&lt;span style=&quot; font-family:'arial unicode ms,Lucida Sans Unicode,sans-serif'; font-size:9pt; color:#55007f; background-color:#ffffff;&quot;&gt;% On&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="auto_fit_CheckBox">
+          <property name="text">
+           <string>Auto-fit</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="zoom_xaxis_checkBox">
+          <property name="text">
+           <string>Zoom-x</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="zoomy_checkBox">
+          <property name="text">
+           <string>Zoom-y</string>
           </property>
          </widget>
         </item>

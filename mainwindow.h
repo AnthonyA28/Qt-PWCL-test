@@ -77,6 +77,12 @@ private slots:
 
     void on_actionExport_Excel_File_triggered();
 
+    void on_auto_fit_CheckBox_stateChanged(int arg1);
+
+    void on_zoom_xaxis_checkBox_stateChanged(int arg1);
+
+    void on_zoomy_checkBox_stateChanged(int arg1);
+
 private:
     COM com;
 
