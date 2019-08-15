@@ -310,7 +310,8 @@ void MainWindow::showRequest(const QString &req)
         ui->plot->graph(1)->addData( time,  tempFilt);
         ui->plot->graph(0)->addData( time,  setPoint);
         ui->plot->replot( QCustomPlot::rpQueuedReplot );
-        ui->plot->rescaleAxes(); // ensure graph fits all data
+        if (ui->auto_fit_CheckBox->isChecked())
+            ui->plot->rescaleAxes(); // should be in a button or somethng
     }
     else{
         qDebug() << "ERROR Failed to deserialize array \n";
