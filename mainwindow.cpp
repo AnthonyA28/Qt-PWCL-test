@@ -79,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->xldoc.write( 1 , 3, "Temperature");
     this->xldoc.write( 1 , 4, "Filtered Temperature");
     this->xldoc.write( 1 , 5, "Set Point");
+    this->xldoc.write( 1 , 6, "Fan Speed");
 
 
 
@@ -186,7 +187,7 @@ void MainWindow::showRequest(const QString &req)
             this->csvdoc.setFileName("..\\log_files\\" + dateStr + "-Test.csv");
             if (this->csvdoc.open(QIODevice::Truncate | QIODevice::WriteOnly | QIODevice::Text)){
                 QTextStream stream(&this->csvdoc);
-                stream << "Time, Percent on, Temperature, Filtered Temperature, Set Point\n";
+                stream << "Time, Percent on, Temperature, Filtered Temperature, Set Point, Fan Speed\n";
             }
             else{
                 qDebug() << " Failed to open  csv file  \n";
@@ -238,13 +239,14 @@ void MainWindow::showRequest(const QString &req)
         this->xldoc.write(ui->outputTable->rowCount(), 3,  (qRound(temp*100))/100.0);
         this->xldoc.write(ui->outputTable->rowCount(), 4,  (qRound(tempFilt*100))/100.0);
         this->xldoc.write(ui->outputTable->rowCount(), 5,  (qRound(setPoint*100))/100.0);
+        this->xldoc.write(ui->outputTable->rowCount(), 6,  (qRound(fanSpeed*100))/100.0);
 
         /*
         *  Update the csv file with the last data read from the port
         */
         char csvOuput[200]   = "";
-        snprintf(csvOuput, sizeof(csvOuput),"%6.2f,%6.2f,%6.2f,%6.2f,%6.2f\n",
-             time,  percentOn,  temp,  tempFilt,  setPoint);
+        snprintf(csvOuput, sizeof(csvOuput),"%6.2f,%6.2f,%6.2f,%6.2f,%6.2f,%6.2f\n",
+             time,  percentOn,  temp,  tempFilt,  setPoint, fanSpeed);
         QTextStream stream(&this->csvdoc);
         stream << csvOuput;
         stream.flush();
