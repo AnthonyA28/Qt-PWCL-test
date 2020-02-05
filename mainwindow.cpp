@@ -423,7 +423,11 @@ void MainWindow::timerEvent(QTimerEvent *event)
         if (ui->portComboBox->count() != portList.size()) {
             ui->portComboBox->clear();
             for (int i = 0; i < portList.size(); i ++) {
-               ui->portComboBox->addItem(portList.at(i).portName());
+                    QString str = portList.at(i).portName();
+                    if(portList.at(i).description().contains("arduino", Qt::CaseInsensitive)) {
+                        str.append(" - " + portList.at(i).description());
+                    }
+                    ui->portComboBox->addItem(str);
             }
         }
     } else {
