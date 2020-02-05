@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>620</width>
-    <height>499</height>
+    <width>665</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>618</width>
+    <width>665</width>
     <height>499</height>
    </size>
   </property>
@@ -97,13 +97,16 @@
         <item>
          <layout class="QFormLayout" name="formLayout">
           <property name="sizeConstraint">
-           <enum>QLayout::SetMinimumSize</enum>
+           <enum>QLayout::SetNoConstraint</enum>
           </property>
           <property name="labelAlignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
+          <property name="horizontalSpacing">
+           <number>6</number>
+          </property>
           <property name="verticalSpacing">
-           <number>0</number>
+           <number>3</number>
           </property>
           <property name="leftMargin">
            <number>5</number>
@@ -346,22 +349,6 @@
             </property>
            </spacer>
           </item>
-          <item row="7" column="0">
-           <widget class="QComboBox" name="portComboBox">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="editable">
-             <bool>false</bool>
-            </property>
-            <property name="frame">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="7" column="1">
            <widget class="QPushButton" name="setButton">
             <property name="sizePolicy">
@@ -388,6 +375,22 @@
              <bool>true</bool>
             </property>
             <property name="default">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QComboBox" name="portComboBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <property name="frame">
              <bool>true</bool>
             </property>
            </widget>
@@ -449,7 +452,7 @@
            </font>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Input Variance:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Input Variance :&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -485,7 +488,7 @@
            </font>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Average Squared Error:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Avg Error&lt;span style=&quot; vertical-align:super;&quot;&gt;2 &lt;/span&gt;:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -521,7 +524,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Score:</string>
+           <string>Score :</string>
           </property>
          </widget>
         </item>
@@ -552,7 +555,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;K&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;C&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;K&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;C &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -578,7 +581,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;I&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;I &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -604,7 +607,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;D&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;D &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -630,7 +633,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;F&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Τ&lt;/span&gt;&lt;span style=&quot; font-size:9pt; vertical-align:sub;&quot;&gt;F &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -656,7 +659,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Mode:</string>
+           <string>Mode :</string>
           </property>
          </widget>
         </item>
@@ -1066,7 +1069,7 @@ Point [°C]</string>
         <item>
          <widget class="QCheckBox" name="zoomy_checkBox">
           <property name="text">
-           <string>Zoom-y</string>
+           <string>Zoom left y-axis</string>
           </property>
          </widget>
         </item>
@@ -1081,8 +1084,8 @@ Point [°C]</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>620</width>
-     <height>21</height>
+     <width>665</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
