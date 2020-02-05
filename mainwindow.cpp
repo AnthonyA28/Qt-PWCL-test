@@ -433,6 +433,9 @@ void MainWindow::timerEvent(QTimerEvent *event)
     } else {
         killTimer(this->timerId); // no reason for the timer anymore
         ui->setButton->setText("Set");   // change connect button to set button
+            if( port.L_isConnected() ) {
+                ui->portComboBox->setDisabled(1);
+            }
     }
 
 }
