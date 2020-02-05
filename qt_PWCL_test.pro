@@ -48,17 +48,20 @@ QXLSX_SOURCEPATH=./source/  # current QXlsx source path is ./source/
 include(./QXlsx.pri)
 
 SOURCES += \
+        about.cpp \
         main.cpp \
         mainwindow.cpp \
         port.cpp \
         qcustomplot.cpp
 
 HEADERS += \
+        about.h \
         mainwindow.h \
         port.h \
         qcustomplot.h
 
 FORMS += \
+        about.ui \
         mainwindow.ui
 
 RESOURCES += \

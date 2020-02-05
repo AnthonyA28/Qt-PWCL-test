@@ -1093,6 +1093,7 @@ Point [°C]</string>
      <string>File</string>
     </property>
     <addaction name="actionExport_Excel_File"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -1108,6 +1109,11 @@ Point [°C]</string>
   <action name="actionExport_Excel_File">
    <property name="text">
     <string>Export Excel File</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>
