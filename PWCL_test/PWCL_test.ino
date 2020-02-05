@@ -106,6 +106,7 @@ float fanSpeed = fanSetting[1];  //range 0 or 115 -255, startup cannot be as low
 float TsetPoint = Tsp[1];  // deg C
 int tdelay = 3; //delay in msec used with serial interaction commands
 int tGETSET = 1000;  //delay before some GET and SET commands
+bool T_sensorOK = true;
 
 /******shared between C++ code */
 #define i_kc            0
@@ -380,13 +381,6 @@ void loop(void) {  //MAIN CODE iterates indefinitely
   //The sampling interval actually ends when a new measurement is available
   //loopPeriod = samplingPeriod, but sampling interval lags behind
 
-  //Checking if Temp ok
-  if (temperature > Tmax){    //if noisy use tmpFiltered
-    stopTempHigh = 1;
-    Serial.println("Shutting down due to overheat!");
-    shutdown();
-  }
-
     /* place current values in the output array */
   com.set(i_pOnNominal, percentRelayOnNominal);
   com.set(i_kc, Kc);
@@ -405,9 +399,25 @@ void loop(void) {  //MAIN CODE iterates indefinitely
   com.set(i_avg_err, Jy);
   com.set(i_score, J);
 
-  /* fill the ouput char buffer with the contents of the output array */
-  //// dont need this // Serial.println(buffer); // send the output buffer to the port
-  com.printCurVals();
+  /* Check if temperature is within realistic measurement range. */
+  if(temperature < 80.0 && temperature > 0.0){
+    T_sensorOK = true;
+    com.printCurVals(); // show current parameters if the temperature is within realistic range
+  } else { // the probe is malfunctioning because the reading is unrealistic
+    if( T_sensorOK ) {
+      T_sensorOK = false;
+    } else {
+      com.printCurVals(); // show current parameters if the temperature is within realistic range
+      Serial.println("Shutting down due to issue with temperature probe! Check that no wire got loose.");
+      shutdown();   
+    }
+  }
+  /* Check if temperautre outside of safe range and within realistic measurements */
+  if (temperature > Tmax && T_sensorOK) {
+    Serial.println("Shutting down due to overheat!");
+    shutdown();
+  }
+  
   while ( millis() < tLoopStart + stepSize ){
     relayCare();
     check_input();
