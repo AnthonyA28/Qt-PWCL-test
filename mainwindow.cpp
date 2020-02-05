@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->validConnection = false;
     // have the table resize with the window
     ui->outputTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->outputTable->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
     // disable any user input into the text boxes (until a connection is made)
     ui->kcTextBox->setEnabled(false);
     ui->tauiTextBox->setEnabled(false);
